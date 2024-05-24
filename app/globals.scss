@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "font";
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family-Estedad-FD !important;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box !important;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+}
+
+main {
+  display: block;
+  height: 100vh;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+img {
+  object-fit: cover;
+}
+
+.card > div {
+  width: 17rem;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem !important;
+  box-shadow: none;
+  padding: 10px;
+}
+.card-Blog > div {
+  display: flex;
+  justify-content: space-between !important;
+  height: 9rem;
+}
+
+.card > img {
+  width: 17rem;
+  height: 11rem !important;
+}
+
+a > li > button {
+  justify-content: center;
+}
+
+.box_shadow {
+  box-shadow: 0px 1px 5px 0px #00000040;
+}
+
+.button-fix {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.rmdp-container {
+  width: 33/333%;
+}
+
+.card-Home > div {
+  padding: 0.5rem 0.3rem;
+  width: 16rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (min-width: 1330px) {
+  .card-Home > div {
+    padding: 0.5rem 0.3rem;
+    width: 17rem;
+    display: flex;
+    justify-content: center;
+  }
+}
+.card-Home > img {
+  border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+  width: 100%;
+  user-select: none;
+  pointer-events: none;
+}
+
+.spinner {
+  animation: spin infinite 5s linear;
+
+  /*You can increase or decrease the timer (5s) to 
+   increase or decrease the speed of the spinner*/
+}
+
+.sliderServices .slick-arrow{
+  display: none !important;
+}
+
+.Toastify__toast-container--top-right {
+  z-index: 1000 !important;
+}
+.Toastify__toast-body {
+  z-index: 1000 !important;
+
+}
+.Toastify__toast {
+  z-index: 1000 !important;
+
+}
+.stick {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
