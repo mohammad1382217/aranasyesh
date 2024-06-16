@@ -42,7 +42,7 @@ const Image: React.FC<Image> = ({
         onClick={onClick}
         ref={ref}
         loading={loading}
-        className={`${className} w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden`}
+        className={`w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden ${className} `}
         src={src}
         srcSet={`${src} 480w, ${src} 800w, ${src} 1200w`}
         sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
@@ -59,7 +59,7 @@ const Image: React.FC<Image> = ({
       style={{
         backgroundColor: "gray",
       }}
-      className="object-fill"
+      className="w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden"
       sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
       width={width}
       height={height}
