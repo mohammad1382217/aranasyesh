@@ -2,7 +2,7 @@ import axios, { AxiosError, CancelTokenSource } from "axios";
 import axiosInstance from "./apiConfig";
 
 export const postPhoneNumber = async(Object: phoneNumber) => {
-  let cancelTokenSource: CancelTokenSource | null = null;
+  const cancelTokenSource: CancelTokenSource | null = null;
 
   try {
     const response = await axiosInstance.post("account/", Object, {

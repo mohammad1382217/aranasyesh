@@ -2,7 +2,7 @@ import React from "react";
 import ImageHomeHeaderLeft2 from "../assets/images/coffee.webp";
 import ImageHomeHeaderRight from "../assets/images/coffee2.webp";
 import ImageHomeHeaderLeft1 from "../assets/images/dentist.webp";
-import LazyImage from "../components/LazyImage";
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const AboutUs = () => {
   return (
@@ -12,32 +12,34 @@ const AboutUs = () => {
           <h1 className="text-[#7F38B7] self-center md:self-start text-3xl sm:text-4xl font-semibold">
             درباره ما
           </h1>
-          <div className="flex justify-center">
+          <div className="flex justify-center w-full">
+            <section className="w-2/3">
             <LazyImage
               src={ImageHomeHeaderRight}
-              className="w-2/3 rounded-t-lg"
+              className="rounded-t-lg"
               alt="ImageHomeHeaderRight"
               width={"66.666667%"}
               height={"100%"}
             />
-            <div className="flex flex-col w-1/3">
+            </section>
+            <section className="flex flex-col w-1/3">
               <LazyImage
                 src={ImageHomeHeaderLeft1}
-                className="w-full rounded-t-lg"
+                className="rounded-t-lg"
                 alt="ImageHomeHeaderLeft1"
                 width={"100%"}
                 height={"100%"}
               />
               <LazyImage
                 src={ImageHomeHeaderLeft2}
-                className="w-full rounded-t-lg"
+                className="rounded-t-lg"
                 alt="ImageHomeHeaderLeft2"
                 width={"100%"}
                 height={"100%"}
               />
-            </div>
+            </section>
           </div>
-          <p className="text-base font-light text-[#303030] text-justify">
+          <p lang="fa" className="text-base font-light text-[#303030] text-justify">
             مجوعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید دانشگاه و
             صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا مرادی مشغول
             فعالیت است. این مجموعه با راه‌اندازی شبکه سراسری تخفیف ایران با

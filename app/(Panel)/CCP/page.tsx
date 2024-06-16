@@ -1,13 +1,23 @@
-import React, { ChangeEvent, useEffect, useReducer, useState } from "react";
-import DragUpload from "../../components/DragUpload";
-import { TextArea } from "../../components/TextArea";
-import Input from "../../components/input";
-import { Label } from "flowbite-react";
+import React, {
+  ChangeEvent,
+  lazy,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { fetchCCP } from "../../api/fetchccp";
-import { CCPReducer, initialCCP } from "../../api/Slices/CCPSlice/CCP";
 import axiosInstance from "../../api/apiConfig";
-import SubmitButton from "../../components/submitButton";
-import LazyImage from "../../components/LazyImage";
+import { CCPReducer, initialCCP } from "../../api/Slices/CCPSlice/CCP";
+import Video from "../../components/video";
+
+const Label = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Label }))
+);
+const DragUpload = lazy(() => import("../../components/DragUpload"));
+const TextArea = lazy(() => import("../../components/TextArea"));
+const Input = lazy(() => import("../../components/input"));
+const SubmitButton = lazy(() => import("../../components/submitButton"));
+const LazyImage = lazy(() => import("../../components/LazyImage"));
 
 export const List = [
   // { title: "اطلاعات مجموعه", link: "/CCP/CCP" },
@@ -44,10 +54,7 @@ const CCP = () => {
     formData.append("telegram", CCPState.CCP.telegram);
 
     try {
-      const response = await axiosInstance.patchForm(
-        `ccp/${CCPState.CCP.id}/`,
-        PatchData
-      );
+      await axiosInstance.patchForm(`ccp/${CCPState.CCP.id}/`, PatchData);
       const cleanupCCP = fetchCCP(dispatchCCP);
       setTimeout(() => {
         setBackgroundColorCPP("#5cb85c"); // تغییر رنگ بک‌گراند به سبز برای موفقیت
@@ -151,7 +158,7 @@ const CCP = () => {
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">تصویر 1</span>
               <LazyImage
-                className={"bg-cover h-36"}
+                className={"bg-cover !h-36"}
                 src={CCPState.CCPInformation[0]?.company_image1}
                 alt="{تصویر 1}"
                 loading={"lazy"}
@@ -162,7 +169,7 @@ const CCP = () => {
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">تصویر 2</span>
               <LazyImage
-                className={"bg-cover h-36"}
+                className={"bg-cover !h-36"}
                 src={CCPState.CCPInformation[0]?.company_image2}
                 alt="{تصویر 2}"
                 loading={"lazy"}
@@ -173,7 +180,7 @@ const CCP = () => {
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">تصویر 3</span>
               <LazyImage
-                className={"bg-cover h-36"}
+                className={"bg-cover !h-36"}
                 src={CCPState.CCPInformation[0]?.company_image3}
                 alt="{تصویر 3}"
                 loading={"lazy"}
@@ -184,7 +191,7 @@ const CCP = () => {
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">تصویر 4</span>
               <LazyImage
-                className={"bg-cover h-36"}
+                className={"bg-cover !h-36"}
                 src={CCPState.CCPInformation[0]?.company_image4}
                 alt="{تصویر 4}"
                 loading={"lazy"}
@@ -195,7 +202,7 @@ const CCP = () => {
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">تصویر 5</span>
               <LazyImage
-                className={"bg-cover h-36"}
+                className={"bg-cover !h-36"}
                 src={CCPState.CCPInformation[0]?.company_image5}
                 alt="{تصویر 5}"
                 loading={"lazy"}
@@ -205,10 +212,10 @@ const CCP = () => {
             </div>
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">ویدئو</span>
-              <video
-                controls
+              <Video
                 src={CCPState.CCPInformation[0]?.video!}
-                className={"bg-cover h-36"}
+                className={"bg-cover !h-36"}
+                alt={"ccp"}
               />
             </div>
           </div>

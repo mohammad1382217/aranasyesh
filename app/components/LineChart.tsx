@@ -4,13 +4,18 @@ import {
   Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-  Label,
+  CartesianGrid,
 } from "recharts";
 
-const MyAreaChart = (DiscountHistory:any) => {
+const ResponsiveContainer = React.lazy(() =>
+  import("recharts").then((module) => ({ default: module.ResponsiveContainer }))
+);
+const Label = React.lazy(() =>
+  import("recharts").then((module) => ({ default: module.Label }))
+);
+
+const MyAreaChart = (DiscountHistory: { DiscountHistory: { DiscountHistory: any[]; }; }) => {
   // تولید داده‌ها برای نمونه
   const data = Array.from({ length: 30 }, (_, index) => ({
     name: index + 1,

@@ -41,10 +41,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Navigate to={"Home"} replace={true} />,
-      },
-      {
-        path: "Home",
         element: (
           <Suspense fallback={<Loading />}>
             <Home />
@@ -140,7 +136,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "search/:Search",
+        path: "search",
         element: (
           <Suspense fallback={<Loading />}>
             <SearchPage />
@@ -236,5 +232,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />
+  <Suspense fallback={<Loading />}>
+    <RouterProvider router={router} />
+  </Suspense>
 );

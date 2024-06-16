@@ -4,25 +4,16 @@ import zomorod from "../assets/svg/emerald.svg";
 import Firooze from "../assets/svg/cyan-diamond.svg";
 import diamond from "../assets/svg/Beautiful-diamond.svg";
 import appMobile from "../assets/images/appMobile.webp";
-import { SimpleCard } from "../components/simpleCard";
 import credit from "../assets/svg/credit-cards-desktop.svg";
 import { fetchProduct } from "../api/fetchProduct";
 import {
   ProductReducer,
   initialProduct,
 } from "../api/Slices/ProductSlice/product";
-import {
-  Input as MaterialInput,
-  Chip,
-  Button,
-  Dialog,
-  DialogBody,
-} from "@material-tailwind/react";
 import { HomeReducer, initialHome } from "../api/Slices/HomeSlice/Home";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../api/apiConfig";
+import axiosInstance, { getCookie, setCookie } from "../api/apiConfig";
 import axios, { AxiosError, CancelTokenSource } from "axios";
-import Input from "../components/input";
 import logo from "../assets/svg/logo-orginal.svg";
 import { initialLogin, LoginReducer } from "../api/Slices/LoginSlice/Login";
 import { toast } from "react-toastify";
@@ -33,8 +24,27 @@ import {
   UserContext,
   UserContextType,
 } from "../api/Slices/UserSlice/userProvider";
-import SubmitButton from "../components/submitButton";
-import LazyImage from "../components/LazyImage";
+
+// Lazy load the components
+const SimpleCard = React.lazy(() => import("../components/simpleCard"));
+const Button = React.lazy(
+  () => import("@material-tailwind/react/components/Button")
+);
+const Dialog = React.lazy(
+  () => import("@material-tailwind/react/components/Dialog")
+);
+const DialogBody = React.lazy(
+  () => import("@material-tailwind/react/components/Dialog/DialogBody")
+);
+const MaterialInput = React.lazy(
+  () => import("@material-tailwind/react/components/Input")
+);
+const Chip = React.lazy(
+  () => import("@material-tailwind/react/components/Chip")
+);
+const Input = React.lazy(() => import("../components/input"));
+const SubmitButton = React.lazy(() => import("../components/submitButton"));
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const BuySubscription = () => {
   const User = useContext(UserContext);
@@ -53,11 +63,6 @@ const BuySubscription = () => {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const [LoginState, dispatchLogin] = useReducer(LoginReducer, initialLogin);
-  const [ZARINPAL, setZARINPAL] = useState({
-    url: "",
-    uuid: "",
-  });
-
   const [showCross, setShowCross] = useState(false);
   const [background, setBackground] = useState("#8754AF");
   const [isValid, setIsValid] = useState(false);
@@ -97,7 +102,7 @@ const BuySubscription = () => {
   const handlepostPhoneNumber = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.post(
+      await axiosInstance.post(
         "account/",
         LoginState.PhoneNumber
       );
@@ -153,7 +158,7 @@ const BuySubscription = () => {
           }
         );
         const data = response.data;
-        localStorage.setItem("accessToken", JSON.stringify(data));
+        setCookie("accessToken", data.token,7,true);
         return true;
       } catch (error) {
         if (axios.isCancel(error as AxiosError)) {
@@ -242,8 +247,7 @@ const BuySubscription = () => {
         );
         const data = response.data;
         console.log(data);
-        localStorage.setItem("ZARINPAL", data.uuid);
-        setZARINPAL(data);
+        setCookie("uuid", data.uuid, 0.5, true);
         window.location.replace(data.url);
       } catch (error) {
         if (axios.isCancel(error as AxiosError)) {
@@ -284,7 +288,7 @@ const BuySubscription = () => {
                   در نقاط مختلف کشور عزیزمان وارد مذاکره شده و قراردادهایی را
                   امضا کرده است.
                 </div>
-                <p className="text-base font-light text-[#303030] text-justify">
+                <p lang="fa" className="text-base font-light text-[#303030] text-justify">
                   محصول تیم خلاق آران آسایش آفرینان یعنی کارت تخفیف آران آسایش،
                   حامی اقتصاد خانوار بوده و تلاش شده تا یک مجموعه جامع و یکپارچه
                   از محصولات و خدمات متنوع حوزه‌های سلامت، تفریحی، رفاهی و خماتی
@@ -292,12 +296,14 @@ const BuySubscription = () => {
                   اعتماد کامل از این سامانه که متعلق به خودتان است بهره‌مند
                   شوید.
                 </p>
-                <p className="text-base font-light text-[#303030] text-justify mt-6 ">
+                <p lang="fa" className="text-base font-light text-[#303030] text-justify mt-6 ">
                   شما میتوانید با استفاده از شماره کارت یا شبای موجود، هزینه را
                   برایمان واریز کنید و بعد از واریز با شماره های موجود تماس
                   گرفته تا اشتراک شما برایتان فعال شود.
                 </p>
-                <span className="block mt-3">IR11 0120 0000 0000 8937 5738 84</span>
+                <span className="block mt-3">
+                  IR11 0120 0000 0000 8937 5738 84
+                </span>
                 <span className="block mb-3 text-right" dir="ltr">
                   6104 3373 9653 2184
                 </span>
@@ -309,7 +315,15 @@ const BuySubscription = () => {
                 </span>
               </div>
             </div>
-            <LazyImage src={credit} alt="credit" width={undefined} height={undefined} />
+            <div className="w-full flex justify-center items-center">
+              <LazyImage
+                className="!w-[300px] !h-[350px]"
+                src={credit}
+                alt="credit"
+                width={300}
+                height={350}
+              />
+            </div>
           </div>
         </section>
         <section className="w-full flex items-center justify-between">
@@ -338,14 +352,14 @@ const BuySubscription = () => {
                   </span>
                 }
                 Image={diamond}
-                ImageClass="w-32 -top-[2.75rem] left-0 z-50 xl:w-52 xl:-top-[4rem]"
+                ImageClass="!w-56 !h-48 xs:!h-24 xs:!w-36 -top-[2.75rem] left-0 z-50 md:-top-[4rem]"
                 cardClass="w-full min-h-[431px] bg-gradient-to-r from-[#19177C] to-[#463CB9] pt-10 container mx-auto flex flex-col items-center justify-between p-7 xs:w-10/12 lg:w-11/12 rounded-2xl gap-8"
                 price={`${product?.price?.toLocaleString("fa-IR")} تومان`}
                 Button={
                   <Button
                     className="bg-white text-[#8754AF] text-2xl py-2"
                     onClick={() => {
-                      JSON.parse(localStorage.getItem("accessToken")!)?.token
+                      getCookie("accessToken")
                         ? handleClickButton(product?.id)
                         : showModalLogin();
                     }}
@@ -396,7 +410,7 @@ const BuySubscription = () => {
                     <Button
                       className="bg-white text-[#8754AF] text-2xl py-2"
                       onClick={() => {
-                        JSON.parse(localStorage.getItem("accessToken")!)?.token
+                        getCookie("accessToken")
                           ? handleClickButton(product?.id)
                           : showModalLogin();
                       }}
@@ -433,7 +447,7 @@ const BuySubscription = () => {
                     <Button
                       className="bg-white text-[#8754AF] text-2xl py-2"
                       onClick={() => {
-                        JSON.parse(localStorage.getItem("accessToken")!)?.token
+                        getCookie("accessToken")
                           ? handleClickButton(product?.id)
                           : showModalLogin();
                       }}
@@ -470,7 +484,7 @@ const BuySubscription = () => {
                     <Button
                       className="bg-white text-[#8754AF] text-2xl py-2"
                       onClick={() => {
-                        JSON.parse(localStorage.getItem("accessToken")!)?.token
+                        getCookie("accessToken")
                           ? handleClickButton(product?.id)
                           : showModalLogin();
                       }}
@@ -508,7 +522,7 @@ const BuySubscription = () => {
                 <h1 className="self-center md:self-start text-3xl sm:text-4xl font-semibold">
                   نحوه استفاده از اشتراک تخفیف آران آسایش
                 </h1>
-                <p className="text-base font-light text-[#303030] text-justify pt-8 pb-10">
+                <p lang="fa" className="text-base font-light text-[#303030] text-justify pt-8 pb-10">
                   محصول تیم خلاق آران آسایش آفرینان یعنی کارت تخفیف آران آسایش،
                   حامی اقتصاد خانوار بوده و تلاش شده تا یک مجموعه جامع و یکپارچه
                   از محصولات و خدمات متنوع حوزه‌های سلامت، تفریحی، رفاهی و خماتی
@@ -518,18 +532,26 @@ const BuySubscription = () => {
                 </p>
               </section>
             </div>
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6 w-full">
               <section className="flex flex-col">
                 <Chip
                   className="text-[#8754AF] border-none bg-[#F5F5F5] text-2xl !w-32 mb-4"
                   variant="outlined"
                   value="قدم یکم"
                 />
-                <p className="text-base font-light text-[#303030] text-justify mb-4">
+                <p lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
                   ابتدا نرم‌افزار آران آسایش را از اینجا دانلود کرده و سپس طبق
                   تصویر، وارد پنل کاربری خود شوید.
                 </p>
-                <LazyImage src={appMobile} alt="appMobile" width={305} height={323} />
+                <div className="w-full h-full flex justify-center items-center">
+                  <LazyImage
+                    className="!w-[368px] !h-[508px]"
+                    src={appMobile}
+                    alt="appMobile"
+                    width={368}
+                    height={508}
+                  />
+                </div>
               </section>
               <section className="flex flex-col">
                 <Chip
@@ -537,11 +559,19 @@ const BuySubscription = () => {
                   variant="outlined"
                   value="قدم دوم"
                 />
-                <p className="text-base font-light text-[#303030] text-justify mb-4">
+                <p lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
                   ابتدا نرم‌افزار آران آسایش را از اینجا دانلود کرده و سپس طبق
                   تصویر، وارد پنل کاربری خود شوید.
                 </p>
-                <LazyImage src={appMobile} alt="appMobile" width={305} height={323} />
+                <div className="w-full h-full flex justify-center items-center">
+                  <LazyImage
+                    className="!w-[368px] !h-[508px]"
+                    src={appMobile}
+                    alt="appMobile"
+                    width={368}
+                    height={508}
+                  />
+                </div>
               </section>
               <section className="flex flex-col">
                 <Chip
@@ -549,11 +579,19 @@ const BuySubscription = () => {
                   variant="outlined"
                   value="قدم سوم"
                 />
-                <p className="text-base font-light text-[#303030] text-justify mb-4">
+                <p lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
                   ابتدا نرم‌افزار آران آسایش را از اینجا دانلود کرده و سپس طبق
                   تصویر، وارد پنل کاربری خود شوید.
                 </p>
-                <LazyImage src={appMobile} alt={appMobile} width={305} height={323} />
+                <div className="w-full h-full flex justify-center items-center">
+                  <LazyImage
+                    className="!w-[368px] !h-[508px]"
+                    src={appMobile}
+                    alt="appMobile"
+                    width={368}
+                    height={508}
+                  />
+                </div>
               </section>
             </div>
           </div>
@@ -574,7 +612,13 @@ const BuySubscription = () => {
           onPointerLeaveCapture={undefined}
         >
           <div className="flex items-center justify-center w-full p-2 py-4">
-            <LazyImage src={logo} className="w-14 h-auto" alt="" width={56} height={56} />
+            <LazyImage
+              src={logo}
+              className="!w-14 h-auto"
+              alt=""
+              width={56}
+              height={56}
+            />
             <h1 className="text-2xl font-semibold text-[#8754AF] mr-3">
               آران آسایش
             </h1>
@@ -768,7 +812,7 @@ const BuySubscription = () => {
           )}
 
           <Button
-            className="bg-[#ECECEC] w-full mt-3 rounded-t-none button-fix py-3 !absolute bottom-0 right-0 text-[#717171] text-base font-light"
+            className="bg-[#ECECEC] w-full mt-3 rounded-t-none absolute right-0 bottom-0 py-3 !absolute bottom-0 right-0 text-[#717171] text-base font-light"
             onClick={() => {
               isSendSms === false ? showModalLogin() : setisSendSms(false);
             }}

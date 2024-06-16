@@ -1,6 +1,12 @@
-import { ListGroup, ListGroupItem } from "flowbite-react";
 import React from "react";
 import { Link } from "react-router-dom";
+
+const ListGroup = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.ListGroup }))
+);
+const ListGroupItem = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.ListGroupItem }))
+);
 
 const FlowbiteListGroup: React.FC<FlowbiteListGroupProps> = ({
   List,

@@ -1,7 +1,3 @@
-import Input from "../components/input";
-import { Select } from "flowbite-react";
-import { TextArea } from "../components/TextArea";
-import FlowbiteListGroup from "../components/ListGroup";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import persian_en from "react-date-object/locales/persian_en";
@@ -13,7 +9,6 @@ import Firooze from "../assets/svg/cyan-diamond.svg";
 import copy from "../assets/svg/copy to clipboard.svg";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import ProvinceData from "../data/province.json";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
 import {
   CitiesReducer,
   initialCities,
@@ -22,16 +17,26 @@ import { fetchCities } from "../api/fetchCities";
 import noteText from "../assets/svg/note-text.svg";
 import { userReducer, initialUser } from "../api/Slices/UserSlice/userReducer";
 import { fetchProfile } from "../api/fetchProfile";
-import axiosInstance from "../api/apiConfig";
+import axiosInstance, { deleteCookie } from "../api/apiConfig";
 import { Link, useNavigate } from "react-router-dom";
 import copied from "../assets/svg/copy.svg";
 import {
   UserContext,
   UserContextType,
 } from "../api/Slices/UserSlice/userProvider";
-import Loading from "../components/loading";
-import SubmitButton from "../components/submitButton";
-import LazyImage from "../components/LazyImage";
+
+const Loading = React.lazy(() => import("../components/loading"));
+const Input = React.lazy(() => import("../components/input"));
+const SubmitButton = React.lazy(() => import("../components/submitButton"));
+const FlowbiteListGroup = React.lazy(() => import("../components/ListGroup"));
+const Select = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Select }))
+);
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const TextArea = React.lazy(() => import("../components/TextArea"));
+const BreadcrumbsWithIcon = React.lazy(
+  () => import("../components/BreadcrumbsWithIcon")
+);
 
 export const CustomInput: React.FC<CustomInputProps> = ({
   onFocus,
@@ -83,20 +88,20 @@ const ProfileOne: React.FC = () => {
 
   useEffect(() => {
     // Check if account data is loaded and the id is valid
-    if (account!?.results.length > 0 && account!?.results[0]?.id !== 0) {
+    if (account?.results.length > 0 && account?.results[0]?.id !== 0) {
       setLoading(true);
       const cleanupProfile = fetchProfile(
         dispatchUser,
-        account!?.results[0]?.id
+        account?.results[0]?.id
       );
       setLoading(false);
       return cleanupProfile;
     }
-  }, [account!?.results[0]?.id]);
+  }, [account?.results[0]?.id]);
 
   // وقتی کاربر لاگ‌آوت می‌کند
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    deleteCookie("accessToken");
     setAccount({
       previous: null,
       page: 1,
@@ -104,20 +109,20 @@ const ProfileOne: React.FC = () => {
       results: [],
     });
     setIsLoggedIn(false);
-    navigate("/Home");
+    navigate("/");
   };
 
   useEffect(() => {
-    if (UserState.profile!?.province !== "") {
+    if (UserState.profile?.province !== "") {
       if (UserState.profile?.province !== null) {
         const cleanuptwo = fetchCities(
           dispatchCities,
-          UserState.profile!?.province!
+          UserState.profile?.province!
         );
         return cleanuptwo;
       }
     }
-  }, [UserState.profile!?.province]);
+  }, [UserState.profile?.province]);
 
   const List: List[] = [
     { title: "اطلاعات حساب", link: "/ProfileOne" },
@@ -144,7 +149,7 @@ const ProfileOne: React.FC = () => {
     event.preventDefault();
     try {
       await axiosInstance.put(
-        `account/${account!?.results[0].id}/`,
+        `account/${account?.results[0].id}/`,
         UserState.editProfile!
       );
       const cleanupProfile = fetchProfile(dispatchUser, account!.results[0].id);
@@ -210,17 +215,16 @@ const ProfileOne: React.FC = () => {
                   <h3 className="flex-1 xl:flex-initial text-xl xs:text-base font-semibold">
                     اطلاعات کاربری
                   </h3>
-                  {/* <div className="flex gap-4"> */}
                   {!isEdit ? (
                     <div
                       className={`w-full xl:w-auto flex flex-col md:flex-row md:items-center items-start md:gap-6 gap-2 ${
-                        account!?.results[0]?.subscription.name === "الماس"
+                        account?.results[0]?.subscription.name === "الماس"
                           ? "bg-gradient-to-r from-[#19177C] to-[#463CB9]"
-                          : account!?.results[0]?.subscription.name === "یاقوت"
+                          : account?.results[0]?.subscription.name === "یاقوت"
                           ? "bg-gradient-to-r from-red-900 to-red-600"
-                          : account!?.results[0]?.subscription.name === "زمرد"
+                          : account?.results[0]?.subscription.name === "زمرد"
                           ? "bg-gradient-to-r from-green-900 to-green-600"
-                          : account!?.results[0]?.subscription.name === "فیروزه"
+                          : account?.results[0]?.subscription.name === "فیروزه"
                           ? "bg-gradient-to-r from-cyan-900 to-cyan-600"
                           : "bg-gradient-to-r from-blue-gray-900 to-blue-gray-600"
                       } text-white py-2 px-4 rounded-lg order-3 xl:order-none`}
@@ -230,15 +234,15 @@ const ProfileOne: React.FC = () => {
                           نوع اشتراک:
                         </h4>
                         <span className="text-base xs:text-xs font-light">
-                          {account!?.results[0]?.subscription.is_buy
-                            ? account!?.results[0]?.subscription.name === ""
+                          {account?.results[0]?.subscription.is_buy
+                            ? account?.results[0]?.subscription.name === ""
                               ? "جشنواره"
-                              : account!?.results[0]?.subscription.name
+                              : account?.results[0]?.subscription.name
                             : "معمولی"}
                         </span>
-                        {account!?.results[0]?.subscription.is_buy ? (
-                          account!?.results[0]?.subscription.name ===
-                          "" ? null : account!?.results[0]?.subscription
+                        {account?.results[0]?.subscription.is_buy ? (
+                          account?.results[0]?.subscription.name ===
+                          "" ? null : account?.results[0]?.subscription
                               .name === "الماس" ? (
                             <LazyImage
                               className="w-8 h-6 xs:w-6 xs:h-4"
@@ -247,7 +251,7 @@ const ProfileOne: React.FC = () => {
                               width={32}
                               height={24}
                             />
-                          ) : account!?.results[0]?.subscription.name ===
+                          ) : account?.results[0]?.subscription.name ===
                             "یاقوت" ? (
                             <LazyImage
                               className="w-8 h-6 xs:w-6 xs:h-4"
@@ -256,7 +260,7 @@ const ProfileOne: React.FC = () => {
                               width={32}
                               height={24}
                             />
-                          ) : account!?.results[0]?.subscription.name ===
+                          ) : account?.results[0]?.subscription.name ===
                             "فیروزه" ? (
                             <LazyImage
                               className="w-8 h-6 xs:w-6 xs:h-4"
@@ -265,7 +269,7 @@ const ProfileOne: React.FC = () => {
                               width={32}
                               height={24}
                             />
-                          ) : account!?.results[0]?.subscription.name ===
+                          ) : account?.results[0]?.subscription.name ===
                             "زمرد" ? (
                             <LazyImage
                               className="w-8 h-6 xs:w-6 xs:h-4"
@@ -285,15 +289,15 @@ const ProfileOne: React.FC = () => {
                         )}
                       </div>
                       <div className="flex items-center gap-4 xs:gap-1">
-                        {account!?.results[0]?.subscription.remain ===
+                        {account?.results[0]?.subscription.remain ===
                         "" ? null : (
                           <>
                             <h4 className="text-base xs:text-xs font-semibold">
                               زمان باقیمانده:
                             </h4>
                             <span className="text-base xs:text-xs font-light">
-                              {account!?.results[0]?.subscription.remain
-                                ? account!?.results[0]?.subscription.remain +
+                              {account?.results[0]?.subscription.remain
+                                ? account?.results[0]?.subscription.remain +
                                   " روز "
                                 : "0 روز"}
                             </span>
@@ -304,54 +308,53 @@ const ProfileOne: React.FC = () => {
                   ) : null}
                   <div className="w-max relative flex flex-1 md:flex-initial items-center justify-center font-sans font-bold uppercase whitespace-nowrap select-none text-xs xs:py-1 xs:px-2 py-2 px-4 rounded-lg text-[#8754AF] border-none bg-[#F5F5F5] gap-2">
                     {isCopied ? (
-                      <LazyImage
-                        className="cursor-pointer"
-                        onClick={() => {
-                          setIsCopied(true);
-                          setTimeout(() => setIsCopied(false), 4000);
-                        }}
-                        src={copied}
-                        alt="copied"
-                        width={"100%"}
-                        height={"100%"}
-                      />
+                        <LazyImage
+                          className="w-[24px] h-[24px] cursor-pointer !aspect-square"
+                          onClick={() => {
+                            setIsCopied(true);
+                            setTimeout(() => setIsCopied(false), 4000);
+                          }}
+                          src={copied}
+                          alt="copied"
+                          width={24}
+                          height={24}
+                        />
                     ) : (
                       <LazyImage
-                        className="cursor-pointer"
+                        className="w-[24px] h-[24px] cursor-pointer !aspect-square"
                         onClick={() => {
                           setIsCopied(true);
                           navigator.clipboard.writeText(
-                            `${UserState.profile!?.customer_code}`
+                            `${UserState.profile?.customer_code}`
                           );
                           setTimeout(() => setIsCopied(false), 4000);
                         }}
                         src={copy}
                         alt={"copy"}
-                        width={"100%"}
-                        height={"100%"}
+                        width={24}
+                        height={24}
                       />
                     )}
                     <span className="text-lg">
-                      {UserState.profile!?.customer_code}
+                      {UserState.profile?.customer_code}
                     </span>
                   </div>
-                  {/* </div> */}
                 </div>
                 <section className="w-full flex items-center justify-between">
                   <div className="w-full flex flex-col lg:flex-row-reverse items-center justify-between gap-8">
                     {isEdit ? null : (
                       <div className="w-full lg:w-auto flex flex-col items-center">
                         <LazyImage
-                          className="w-full lg:w-[178px]"
+                          className="w-full lg:w-[178px] cursor-pointer !aspect-square"
                           src={`https://api.aranasayesh.ir/${
-                            UserState.profile!?.qr_code
+                            UserState.profile?.qr_code
                           }`}
                           alt="qr_code"
                           width={178}
                           height={"100%"}
                         />
                         <span className="text-lg tracking-[12px]">
-                          {UserState.profile!?.representative_code}
+                          {UserState.profile?.representative_code}
                         </span>
                       </div>
                     )}
@@ -544,7 +547,7 @@ const ProfileOne: React.FC = () => {
                                 نام
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.first_name}
+                                {UserState.profile?.first_name}
                               </span>
                             </div>
                             <div className="flex gap-2">
@@ -552,7 +555,7 @@ const ProfileOne: React.FC = () => {
                                 نام خانوادگی
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.last_name}
+                                {UserState.profile?.last_name}
                               </span>
                             </div>
                             <div className="flex gap-2">
@@ -560,7 +563,7 @@ const ProfileOne: React.FC = () => {
                                 تاریخ تولد
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.birth_date}
+                                {UserState.profile?.birth_date}
                               </span>
                             </div>
                           </div>
@@ -570,7 +573,7 @@ const ProfileOne: React.FC = () => {
                                 شماره تماس
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.phone_number}
+                                {UserState.profile?.phone_number}
                               </span>
                             </div>
                             <div className="flex flex-col lg:flex-row gap-2">
@@ -578,7 +581,7 @@ const ProfileOne: React.FC = () => {
                                 آدرس ایمیل
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.email}
+                                {UserState.profile?.email}
                               </span>
                             </div>
                           </div>
@@ -588,7 +591,7 @@ const ProfileOne: React.FC = () => {
                                 استان
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.province}
+                                {UserState.profile?.province}
                               </span>
                             </div>
                             <div className="flex gap-2">
@@ -596,7 +599,7 @@ const ProfileOne: React.FC = () => {
                                 شهر
                               </span>
                               <span className="text-[#303030] w-24">
-                                {UserState.profile!?.city}
+                                {UserState.profile?.city}
                               </span>
                             </div>
                           </div>
@@ -606,7 +609,7 @@ const ProfileOne: React.FC = () => {
                                 آدرس
                               </span>
                               <span className="text-[#303030]">
-                                {UserState.profile!?.address}
+                                {UserState.profile?.address}
                               </span>
                             </div>
                           </div>
@@ -648,16 +651,6 @@ export interface CustomInputProps {
     | React.FocusEventHandler<HTMLInputElement>
     | React.MouseEventHandler<HTMLImageElement>;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-}
-
-interface FormFields {
-  first_name: string | null;
-  last_name: string | null;
-  birth_date: string | null;
-  email: string | null;
-  province: string | null;
-  city: string | null;
-  address: string | null;
 }
 
 export interface List {

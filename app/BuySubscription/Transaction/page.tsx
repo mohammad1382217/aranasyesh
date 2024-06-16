@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axiosInstance from "../../api/apiConfig";
+import axiosInstance, { getCookie } from "../../api/apiConfig";
 import axios, { AxiosError, CancelTokenSource } from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,7 +44,7 @@ const TransactionPage = () => {
       if (!cancelTokenSource) return; // Exit if cancel token is null
       try {
         const response = await axiosInstance.post(
-          `product/transaction/${localStorage.getItem("ZARINPAL")}/verify/`,
+          `product/transaction/${getCookie("uuid")}/verify/`,
           formData,
           {
             cancelToken: cancelTokenSource.token,

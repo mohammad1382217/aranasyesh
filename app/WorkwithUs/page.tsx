@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { lazy, useEffect, useReducer, useState } from "react";
 import Input from "../components/input";
 import map from "../assets/images/map.webp";
 import sms from "../assets/svg/sms.svg";
@@ -9,21 +9,22 @@ import laptop from "../assets/images/MacBook Pro 16.webp";
 import WorkwithUsCard from "../components/WorkwithusCard";
 import telegram from "../assets/svg/telegram.svg";
 import whatsapp from "../assets/svg/whatsapp.svg";
-import { TextArea } from "../components/TextArea";
 import instegram from "../assets/svg/instagram.svg";
 import phone from "../assets/images/Samsung Galaxy Z Fold 3.webp";
-import { Dialog, DialogBody } from "@material-tailwind/react";
+import Dialog from "@material-tailwind/react/components/Dialog";
+import DialogBody from "@material-tailwind/react/components/Dialog/DialogBody";
 import {
   initialWorkwithus,
   WorkwithusReducer,
 } from "../api/Slices/WorkwithusSlice/Workwithus";
 import SubmitButton from "../components/submitButton";
-import axiosInstance from "../api/apiConfig";
+import axiosInstance, { getCookie } from "../api/apiConfig";
 import axios, { AxiosError, CancelTokenSource } from "axios";
-
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import LazyImage from "../components/LazyImage";
+
+const TextArea = lazy(()=> import("../components/TextArea"));
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const WorkWithUs = () => {
   const [openApp, SetopenApp] = useState(false);
@@ -60,7 +61,7 @@ const WorkWithUs = () => {
   };
 
   const handelModalSite = () => {
-    if (localStorage.getItem("accessToken")) {
+    if (getCookie("accessToken") ) {
       SetopenSite(!openSite);
     } else {
       showToastErrorMessage();
@@ -68,7 +69,7 @@ const WorkWithUs = () => {
   };
 
   const handelModalApp = () => {
-    if (localStorage.getItem("accessToken")) {
+    if (getCookie("accessToken") ) {
       SetopenApp(!openApp);
     } else {
       showToastErrorMessage();
@@ -80,10 +81,10 @@ const WorkWithUs = () => {
       <section className="container mx-auto mt-10 flex flex-col items-center md:!flex-row-reverse p-7 w-11/12 lg:w-10/12 bg-[#FFFFFF] rounded-2xl gap-8">
         <LazyImage
           src={workwithus}
-          className="w-full sm:w-[50%] sm:h-[30%] bg-cover object-fill bg-no-repeat"
+          className="w-full h-[162px] bg-cover object-fill bg-no-repeat"
           alt="workwithus"
-          width={"100%"}
-          height={"100%"}
+          width={280}
+          height={162}
         />
         <div className="w-full flex flex-col justify-center lg:justify-start items-start text-justify gap-8 md:gap-6">
           <h1
@@ -121,7 +122,7 @@ const WorkWithUs = () => {
         >
           فرم درخواست پیوستن به زیرمجموعه آران آسایش{" "}
         </h2>
-        <p className="text-base font-light text-[#303030] text-justify">
+        <p lang="fa" className="text-base font-light text-[#303030] text-justify">
           جهت ثبت مجموعه خود و استفاده از امکانات گروه آران آسایش برای افزایش
           بهره‌وری تبلیغاتی و درآمدی، اطلاعات دقیق مجموعه خود را جهت بررسی، در
           فرم زیر وارد کرده و پس از ثبت اطلاعات، منتظر تماس کارشناسان ما باشید.
@@ -208,7 +209,7 @@ const WorkWithUs = () => {
           buttonBgColor={backgroundColor}
           buttonText={buttonText}
           onClick={async () => {
-            if (localStorage.getItem("accessToken")) {
+            if (getCookie("accessToken") ) {
               setLoading(true);
               setbuttonText("درحال درخواست");
 
@@ -317,10 +318,10 @@ const WorkWithUs = () => {
                 <div className="flex md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between p-3">
                   <LazyImage
                     src={telegram}
-                    className="mr-5"
+                    className="mr-5 !w-[26px] !h-6"
                     alt="telegram"
-                    width={"100%"}
-                    height={"100%"}
+                    width={24}
+                    height={24}
                   />
                   <span className="text-lg font-light text-[#303030]">
                     @aranasayesh_ir
@@ -329,10 +330,10 @@ const WorkWithUs = () => {
                 <div className="flex md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between p-3">
                   <LazyImage
                     src={instegram}
-                    className="mr-5"
+                    className="mr-5 !w-[33px] !h-[30px]"
                     alt="instegram"
-                    width={"100%"}
-                    height={"100%"}
+                    width={33}
+                    height={30}
                   />
                   <span className="text-lg font-light text-[#303030]">
                     @aranasayesh_ir
@@ -341,10 +342,10 @@ const WorkWithUs = () => {
                 <div className="flex md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between p-3">
                   <LazyImage
                     src={whatsapp}
-                    className="mr-5"
+                    className="mr-5 !w-8 !h-8"
                     alt="whatsapp"
-                    width={"100%"}
-                    height={"100%"}
+                    width={32}
+                    height={32}
                   />
                   <span className="text-lg font-light text-[#303030]">
                     @aranasayesh_ir
@@ -353,10 +354,10 @@ const WorkWithUs = () => {
                 <div className="flex md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between p-3">
                   <LazyImage
                     src={eitaa}
-                    className="mr-5"
+                    className="mr-5 !w-[29px] !h-[29px]"
                     alt="eitaa"
-                    width={"100%"}
-                    height={"100%"}
+                    width={29}
+                    height={29}
                   />
                   <span className="text-lg font-light text-[#303030]">
                     @aranasayesh_ir
@@ -374,10 +375,10 @@ const WorkWithUs = () => {
                   <div className="flex p-3 md:px-1 md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between ">
                     <LazyImage
                       src={call}
-                      className="mr-3"
+                      className="mr-3 !w-8 !h-8"
                       alt="call"
-                      width={"100%"}
-                      height={"100%"}
+                      width={32}
+                      height={32}
                     />
                     <span className="text-lg font-light text-[#303030]">
                       025-31234567
@@ -397,10 +398,10 @@ const WorkWithUs = () => {
                   <div className="flex p-3 md:scale-75 md:py-1 flex-row-reverse items-center justify-between ">
                     <LazyImage
                       src={sms}
-                      className="mr-3"
+                      className="mr-3 !w-8 !h-8"
                       alt="sms"
-                      width={"100%"}
-                      height={"100%"}
+                      width={32}
+                      height={32}
                     />
                     <span className="text-lg font-light text-[#303030]">
                       aranasayesh@gmail.com
@@ -423,7 +424,7 @@ const WorkWithUs = () => {
               <div className="flex p-3 md:p-0 flex-row-reverse items-center justify-between ">
                 <LazyImage
                   src={map}
-                  className="md:w-56 lg:w-96 lg:h-full md:h-28"
+                  className="md:!w-56 lg:!w-96 lg:!h-full md:!h-28"
                   alt="map"
                   width={"100%"}
                   height={"100%"}
@@ -484,7 +485,7 @@ const WorkWithUs = () => {
               buttonBgColor={backgroundColor}
               buttonText={buttonText}
               onClick={async () => {
-                if (localStorage.getItem("accessToken")) {
+                if (getCookie("accessToken") ) {
                   setLoading(true);
                   setbuttonText("درحال درخواست");
 
@@ -614,7 +615,7 @@ const WorkWithUs = () => {
               buttonBgColor={backgroundColor}
               buttonText={buttonText}
               onClick={async () => {
-                if (localStorage.getItem("accessToken")) {
+                if (getCookie("accessToken") ) {
                   setLoading(true);
                   setbuttonText("درحال درخواست");
 

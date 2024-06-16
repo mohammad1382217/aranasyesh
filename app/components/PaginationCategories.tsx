@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { CardComponentType } from "../components/Card";
-import CardComponent from "../components/Card";
 import foodpost from "../assets/images/foodpost.webp";
+const CardComponent = React.lazy(() =>
+  import("../components/Card")
+);
 
 interface Props {
   data: CardComponentType[];
@@ -24,19 +26,6 @@ const PaginationCategories: React.FC<Props> = ({ data, itemsPerPage }) => {
   // Change page
   const paginate = (pageNumber: number): void => setCurrentPage(pageNumber);
 
-  // Change page to the next page
-  const paginateNext = (): void => {
-    if (indexOfLastItem < data.length) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Go to previous page
-  const goToPreviousPage = (): void => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
   return (
     <>
       <div className="space-y-10 justify-center justify-items-center items-center content-center grid-cols-1  sm:gap-4 sm:space-y-0 grid grid-flow-row sm:grid-cols-2 lg:gap-8 lg:grid-cols-3 2xl:gap-10 2xl:grid-cols-4">

@@ -23,7 +23,8 @@ export const fetchSide = (dispatch: Dispatch<Action>): (() => void) => {
       dispatch({ type: "FETCH_SUCCESS_side", payload: data });
     } catch (error) {
       if (axios.isCancel(error as AxiosError)) {
-              } else {
+        console.log("Request canceled by cleanup");
+      } else {
         // Handle error if it's not a cancellation error
         const errorMessage = (error as Error).message; // Type assertion
         dispatch({ type: "FETCH_ERROR", payload: errorMessage });

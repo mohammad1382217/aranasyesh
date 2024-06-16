@@ -1,41 +1,47 @@
 import React, {
+  lazy,
   useContext,
   useEffect,
   useReducer,
   useState,
 } from "react";
 import gift from "../assets/svg/gift.svg";
-import Input from "../components/input";
 import search from "../assets/svg/search.svg";
 import { LuUser2 } from "react-icons/lu";
-import axiosInstance from "../api/apiConfig";
-import DropdownCategory from "../components/DropdownCategory";
-import SubmitButton from "../components/submitButton";
+import axiosInstance, { getCookie, setCookie } from "../api/apiConfig";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import { HomeReducer, initialHome } from "../api/Slices/HomeSlice/Home";
 import { LoginReducer, initialLogin } from "../api/Slices/LoginSlice/Login";
-import logo from "../assets/svg/logo-orginal.svg";
-import { toast, ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError, CancelTokenSource } from "axios";
 import { HiDownload, HiMenu } from "react-icons/hi";
+import logo from "../assets/svg/logo-orginal.svg";
 import {
   UserContext,
   UserContextType,
 } from "../api/Slices/UserSlice/userProvider";
-import {
-  Input as MaterialInput,
-  Button,
-  Dialog,
-  DialogBody,
-  Drawer,
-  IconButton,
-  ThemeProvider,
-} from "@material-tailwind/react";
-import { AccordionCustomIcon } from "./AccordionWithIcon";
+import { ThemeProvider } from "@material-tailwind/react/context/theme";
 import Context, { ContextType } from "../api/context";
-import LazyImage from "./LazyImage";
+
+const AccordionCustomIcon = lazy(() => import("./AccordionWithIcon"));
+const MaterialInput = lazy(
+  () => import("@material-tailwind/react/components/Input")
+);
+const Drawer = lazy(() => import("@material-tailwind/react/components/Drawer"));
+const IconButton = lazy(
+  () => import("@material-tailwind/react/components/IconButton")
+);
+const Input = lazy(() => import("../components/input"));
+const SubmitButton = lazy(() => import("../components/submitButton"));
+const DropdownCategory = lazy(() => import("../components/DropdownCategory"));
+const Button = lazy(() => import("@material-tailwind/react/components/Button"));
+const DialogBody = lazy(
+  () => import("@material-tailwind/react/components/Dialog/DialogBody")
+);
+const Dialog = lazy(() => import("@material-tailwind/react/components/Dialog"));
+const LazyImage = lazy(() => import("./LazyImage"));
 
 const Header = () => {
   const navigate = useNavigate();
@@ -52,7 +58,7 @@ const Header = () => {
   const [loadingSms, setLoadingSms] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
+    if (getCookie("accessToken")) {
       let cancelTokenSource: CancelTokenSource | null = null;
 
       try {
@@ -80,7 +86,7 @@ const Header = () => {
 
       fetchData();
     }
-  }, [localStorage.getItem("accessToken")]);
+  }, [getCookie("accessToken")]);
 
   const handlepostPhoneNumber = async () => {
     setLoading(true);
@@ -90,7 +96,7 @@ const Header = () => {
     // const phoneNumber = Number(LoginState.PhoneNumber.phone_number);
     if (regex1.test(LoginState.PhoneNumber.phone_number)) {
       try {
-        const response = await axiosInstance.post(
+        await axiosInstance.post(
           "account/",
           LoginState.PhoneNumber
         );
@@ -233,7 +239,8 @@ const Header = () => {
           }
         );
         const data = response.data;
-        localStorage.setItem("accessToken", JSON.stringify(data));
+        console.log(data.token)
+        setCookie("accessToken", data.token,7,true);
         setLoading(false);
         setIsValid(true);
         setButtonText("ادامه");
@@ -284,8 +291,7 @@ const Header = () => {
       navigate("/ProfileOne");
       showToastMessage();
     } else {
-      // showModalLogin();
-      // showToastErrorMessage();
+      showToastErrorMessage();
     }
   };
 
@@ -325,13 +331,9 @@ const Header = () => {
       handlepostPhoneNumber();
     }
   };
-  const handelSearch = async () => {
-    const response = await axiosInstance.post("company/search/", {
-      company_name: SearchInput,
-    });
-    navigate(`search/${SearchInput}`, {
-      state: response.data,
-    });
+  
+  const handelSearch = () => {
+    navigate(`search?q=${SearchInput}`);
     setModalSearch(false);
     setSearchInput("");
   };
@@ -362,7 +364,7 @@ const Header = () => {
     <header className="shadow-md border-b-1 shadow-[#00000040]">
       <section className="w-full flex items-center justify-center py-6 lg:py-4 sm:border-b-1">
         <div className="container mx-auto px-4 lg:px-8">
-          <nav className="w-full flex  justify-between px-0  gap-2 ">
+          <nav className="w-full flex  justify-between px-0 py-4 gap-2 ">
             <div className="inline-flex items-center 2xl:hidden">
               <ThemeProvider value={theme}>
                 <IconButton
@@ -400,7 +402,7 @@ const Header = () => {
                       </Button>
                     )}
                     {isLoggedIn ? (
-                      account!?.results[0]?.permission?.is_owner ? (
+                      account?.results[0]?.permission?.is_owner ? (
                         <>
                           <Button
                             className="py-2 rounded-lg border-[3px] border-solid border-[#8754AF] text-lg font-semibold text-[#8754AF] hover:!bg-white bg-white"
@@ -453,6 +455,7 @@ const Header = () => {
                           خرید کارت تخفیف
                         </span>
                         <LazyImage
+                          className="!aspect-square !w-6 !h-6"
                           loading="eager"
                           src={gift}
                           alt={"هدیه"}
@@ -491,13 +494,13 @@ const Header = () => {
                 </Drawer>
               </ThemeProvider>
             </div>
-            <Link className="block" to={"/home"}>
+            <Link className="block" to={"/"}>
               <div className="flex items-center justify-center gap-2 xl:gap-4">
                 <div className="flex self-center ">
                   <LazyImage
                     loading="eager"
                     src={logo}
-                    className="xl:w-[79px] xl:h-[102px] w-[43px] h-[56px]"
+                    className="xl:w-[79px] xl:h-[102px] !w-[43px] !h-[56px]"
                     alt={"logo"}
                     width={79}
                     height={102}
@@ -518,6 +521,7 @@ const Header = () => {
                 onPointerLeaveCapture={undefined}
               >
                 <LazyImage
+                  className="!w-[27px] !h-[26px]"
                   loading="eager"
                   src={search}
                   alt={"search"}
@@ -570,7 +574,7 @@ const Header = () => {
                     type="text"
                     autoFocus={true}
                     placeholder="جستجو (مرکز خدماتی، رستوران، استخر و ...)"
-                    className="w-full xl:block !border-0 mx-0 rounded-[10px] py-2.5 px-3 z-20 focus:outline-none text-sm  text-gray-900 bg-gray-50 !border-[#8754AF] focus:border-2 focus:shadow-none pl-12"
+                    className="w-full xl:block !border-0 mx-0 rounded-[10px] py-2.5 px-3 z-20 focus:outline-none text-sm text-gray-900 bg-gray-50 !border-[#8754AF] focus:border-2 focus:shadow-none pl-12"
                     value={SearchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     onKeyDown={(e) => {
@@ -580,7 +584,6 @@ const Header = () => {
                       }
                     }}
                   />
-                  {/* </div> */}
                 </DialogBody>
               </Dialog>
             </div>
@@ -591,6 +594,7 @@ const Header = () => {
                     خرید کارت تخفیف
                   </span>
                   <LazyImage
+                    className="!aspect-square !w-6 !h-6"
                     loading="eager"
                     src={gift}
                     alt={"هدیه"}
@@ -613,7 +617,7 @@ const Header = () => {
                 </>
               )}
               {isLoggedIn ? (
-                account!?.results[0]?.permission?.is_owner ? (
+                account?.results[0]?.permission?.is_owner ? (
                   <>
                     <Button
                       className="py-2 rounded-lg border-[3px] border-solid border-[#8754AF] text-lg font-semibold text-[#8754AF] hover:!bg-white bg-white"
@@ -679,31 +683,23 @@ const Header = () => {
             <DropdownCategory />
             <div className="w-auto">
               <div className="relative flex items-center">
-                <Button
+                <button
                   aria-label="search"
-                  className="absolute z-50 left-3 top-1/2 transform -translate-y-1/2 bg-transparent border-none cursor-pointer p-0"
-                  onClick={async () => {
-                    const response = await axiosInstance.post(
-                      "company/search/",
-                      { company_name: SearchInput }
-                    );
-                    navigate(`search/${SearchInput}`, {
-                      state: response.data,
-                    });
+                  className="absolute z-50 left-3 top-1/2 transform -translate-y-1/2 bg-transparent shadow-none hover:bg-transparent hover:shadow-none border-none cursor-pointer p-0"
+                  onClick={() => {
+                    navigate(`search?q=${SearchInput}`);
                     setSearchInput("");
                   }}
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
                 >
                   <LazyImage
                     loading="eager"
+                    className="!aspect-square relative !w-[27px] !h-[26px]"
                     src={search}
                     alt={"search"}
                     width={27}
                     height={26}
                   />
-                </Button>
+                </button>
                 <input
                   type="text"
                   placeholder="جستجو (مرکز خدماتی، رستوران، استخر و ...)"
@@ -737,11 +733,12 @@ const Header = () => {
         >
           <div className="flex items-center justify-center w-full p-2 py-4">
             <LazyImage
+              className="!w-20 !h-[102px]"
               loading="eager"
               src={logo}
               alt={"logo"}
-              width={56}
-              height={72}
+              width={79}
+              height={102}
             />
             <h1 className="text-2xl xs:text-xl font-semibold text-[#8754AF] mr-3">
               آران آسایش آفرینان
@@ -954,7 +951,7 @@ const Header = () => {
           )}
 
           <Button
-            className="bg-[#ECECEC] w-full mt-3 rounded-t-none button-fix py-3 !absolute bottom-0 right-0 text-[#717171] text-base font-light"
+            className="bg-[#ECECEC] w-full mt-3 rounded-t-none !absolute right-0 bottom-0 py-3 text-[#717171] text-base font-light"
             onClick={() => {
               isSendSms === false ? showModalLogin() : setisSendSms(false);
             }}

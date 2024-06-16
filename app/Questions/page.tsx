@@ -1,18 +1,19 @@
 import React, { useEffect, useReducer, useState } from "react";
 import question from "../assets/svg/question.svg";
-import {
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-} from "@material-tailwind/react";
+import Accordion from "@material-tailwind/react/components/Accordion";
+import AccordionHeader from "@material-tailwind/react/components/Accordion/AccordionHeader";
+import AccordionBody from "@material-tailwind/react/components/Accordion/AccordionBody";
 import { fetchFAQ } from "../api/fetchFaq";
 import {
   FAQ,
   FAQReducer,
   initialFAQ,
 } from "../api/Slices/FAQSlice/faq";
-import { Button } from "flowbite-react";
-import LazyImage from "../components/LazyImage";
+
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const Button = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Button }))
+);
 
 const Icon = ({ id, open }: { id: number; open: number }) => {
   return (
@@ -119,7 +120,7 @@ const Questions = () => {
               </div>
             </div>
             <div className="flex items-center justify-center">
-              <LazyImage src={question} alt="" width={"100%"} height={"100%"} />
+              <LazyImage className="!w-[325px] !h-[325px]" src={question} alt="" width={325} height={326} />
             </div>
           </div>
           <div className="h-[1px] mx-auto my-6 w-full bg-[#C8C8C8]"></div>

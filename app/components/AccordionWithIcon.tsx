@@ -1,12 +1,10 @@
 import React from "react";
 import { HiChevronDown } from "react-icons/hi";
-import {
-  Accordion,
-  AccordionHeader,
-  AccordionBody,
-} from "@material-tailwind/react";
+const Accordion = React.lazy(()=> import("@material-tailwind/react/components/Accordion"));
+const AccordionHeader = React.lazy(()=> import("@material-tailwind/react/components/Accordion/AccordionHeader"));
+const AccordionBody = React.lazy(()=> import("@material-tailwind/react/components/Accordion/AccordionBody"));
 
-const Icon: React.FC<IconProps> = ({ id, isOpen }) => {
+const Icon: React.FC<IconProps> = ({ isOpen }) => {
   return (
     <HiChevronDown
       className={`${
@@ -16,7 +14,7 @@ const Icon: React.FC<IconProps> = ({ id, isOpen }) => {
   );
 };
 
-export const AccordionCustomIcon: React.FC<AccordionCustomIconProps> = ({
+const AccordionCustomIcon: React.FC<AccordionCustomIconProps> = ({
   headerTitle,
   Id,
   children,
@@ -54,6 +52,7 @@ export const AccordionCustomIcon: React.FC<AccordionCustomIconProps> = ({
     </Accordion>
   );
 };
+export default AccordionCustomIcon;
 
 // Types
 interface IconProps {

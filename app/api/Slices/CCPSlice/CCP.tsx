@@ -16,7 +16,6 @@ export const initialCCP: CCPState = {
     instagram: "",
     telegram: "",
   }
-  // error: null,
 };
 
 export const CCPReducer = (state: CCPState, action: Action): CCPState => {
@@ -54,7 +53,6 @@ export const CCPReducer = (state: CCPState, action: Action): CCPState => {
 export interface CCPState {
   CCPInformation: CCP[];
   CCP: CCP;
-  // error: any;
 }
 
 interface CCP {

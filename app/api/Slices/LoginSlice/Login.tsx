@@ -18,7 +18,6 @@ export const initialLogin: LoginState = {
     code4: "",
     code5: "",
   },
-  // error: null,
 };
 
 export const LoginReducer = (state: LoginState, action: Action): LoginState => {
@@ -80,7 +79,6 @@ export interface LoginState {
     code4: string;
     code5: string;
   };
-  // error: any;
 }
 
 export interface SetPhoneNumberAction {

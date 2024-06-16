@@ -67,7 +67,7 @@ export interface category {
   sub_categories: subCategory[];
 }
 
-interface categoryItems {
+export interface categoryItems {
   company_image1: string;
   company_name: string;
   discount: number;

@@ -1,13 +1,13 @@
-import React, { useEffect, useReducer } from "react";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
-import { useParams } from "react-router-dom";
-import { BlogReducer, initialBlog } from "../api/Slices/BlogSlice/blog";
-import { fetchBlogPost } from "../api/fetchblogPost";
 import { Helmet } from "react-helmet";
-import LazyImage from "../components/LazyImage";
+import { useParams } from "react-router-dom";
+import React, { useEffect, useReducer } from "react";
+import { fetchBlogPost } from "../api/fetchblogPost";
+import { BlogReducer, initialBlog } from "../api/Slices/BlogSlice/blog";
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
 
 const BlogPost: React.FC = () => {
-  let { id } = useParams();
+  const { id } = useParams();
   const [Blogs, dispatchBlogs] = useReducer(BlogReducer, initialBlog);
   useEffect(() => {
     const cleanupBanner = fetchBlogPost(dispatchBlogs, id);

@@ -20,14 +20,14 @@ const CardProposal: React.FC<CardComponentType> = ({
   const navigate = useNavigate();
   return (
     <div
-      className="w-60 select-none card  bg-[#FFFFFF] card-Home box_shadow justify-start items-center flex flex-col  sm:w-64 md:w-56 lg:w-60 !p-0 rounded-2xl !gap-0 2xl:h-auto h-64 card cursor-pointer card-Home"
+      className="w-60 select-none card  bg-[#FFFFFF] card-Home box_shadow justify-start items-center flex flex-col sm:w-64 md:w-56 lg:w-60 !p-0 rounded-2xl !gap-0 2xl:h-auto h-64 card cursor-pointer card-Home overflow-hidden flex-shrink-0"
       onClick={() => {
         navigate(`/Services/${Id}`);
       }}
     >
       <LazyImage
         src={img}
-        className=""
+        className="!h-44"
         alt="subcategory"
         width={283}
         height={176}

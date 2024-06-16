@@ -12,6 +12,7 @@ Aran-Asayesh
 dist
 dist-ssr
 stats.html
+tsconfig.tsbuildinfo
 *.local
 
 # Editor directories and files

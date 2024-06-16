@@ -1,8 +1,5 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import LineSpace from "../components/lineSpace";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
 import { useNavigate, useParams } from "react-router-dom";
-import CardComponent from "../components/Card";
 import {
   BannerReducer,
   CardCompany,
@@ -11,10 +8,14 @@ import {
 import { fetchCategoryCompany } from "../api/fetchCategoryComany";
 import Loading from "../components/loading";
 import Context, { ContextType } from "../api/context";
-import LazyImage from "../components/LazyImage";
+
+const LineSpace = React.lazy(() => import("../components/lineSpace"));
+const CardComponent = React.lazy(() => import("../components/Card"));
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
 
 const Categories: React.FC = () => {
-  let { Name, page } = useParams();
+  const { Name, page } = useParams();
   const context = useContext(Context);
   const { categoryData } = context as ContextType;
   const [Banners, dispatchBanners] = useReducer(BannerReducer, initialBanner);
@@ -58,7 +59,7 @@ const Categories: React.FC = () => {
                   text={item.show_name}
                   icon={
                     <LazyImage
-                      className="w-7 h-7 my-10"
+                      className="!w-7 !h-7 my-10"
                       src={item.icon}
                       alt={item.name}
                       width={28}

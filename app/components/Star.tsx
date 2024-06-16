@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-
-function StarRating({
+const StarRating = ({
   defaultValue,
   onChange,
   isLoggedIn,
@@ -11,14 +10,13 @@ function StarRating({
   defaultValue: number;
   onChange: (value: number) => void;
   isLoggedIn: boolean;
-}) {
+}) => {
   const [value, setValue] = useState(defaultValue || 0);
   const showToastErrorRatingMessage = () => {
     toast.error("به منظور امتیازدهی ابتدا وارد شوید", {
       position: "top-center",
     });
   };
-
 
   useEffect(() => {
     setValue(defaultValue);
@@ -54,6 +52,6 @@ function StarRating({
       ))}
     </div>
   );
-}
+};
 
 export default StarRating;

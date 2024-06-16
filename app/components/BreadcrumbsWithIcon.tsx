@@ -1,9 +1,10 @@
-import { Breadcrumbs } from "@material-tailwind/react";
+import React from "react";
+import Breadcrumbs from "@material-tailwind/react/components/Breadcrumbs";
 import home from "../assets/svg/home.svg";
 import { Link } from "react-router-dom";
-import LazyImage from "./LazyImage";
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
-export const BreadcrumbsWithIcon: React.FC<BreadcrumbsWithIconProps> = ({
+const BreadcrumbsWithIcon: React.FC<BreadcrumbsWithIconProps> = ({
   Address,
 }) => {
   return (
@@ -14,8 +15,8 @@ export const BreadcrumbsWithIcon: React.FC<BreadcrumbsWithIconProps> = ({
       onPointerEnterCapture={undefined}
       onPointerLeaveCapture={undefined}
     >
-      <Link to="/home" className="opacity-60">
-        <LazyImage className="h-4 w-4" src={home} alt="home" width={16} height={16} />
+      <Link to="/" className="opacity-60">
+        <LazyImage className="!h-4 !w-4" src={home} alt="home" width={16} height={16} />
       </Link>
       {Address.map((item, index) =>
         Address.length - 1 !== index ? (
@@ -31,6 +32,7 @@ export const BreadcrumbsWithIcon: React.FC<BreadcrumbsWithIconProps> = ({
     </Breadcrumbs>
   );
 };
+export default BreadcrumbsWithIcon;
 
 // Types
 interface BreadcrumbsWithIconProps {

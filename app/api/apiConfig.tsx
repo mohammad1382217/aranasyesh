@@ -4,20 +4,38 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 
+// Function to get a cookie by name
+export const getCookie = (name: string): string | null => {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+// Function to set a cookie
+export const setCookie = (name: string, value: string, days: number, secure: boolean = false, SameSite: string = "Strict") => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+  let cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=${SameSite}`;
+  if (secure) {
+    cookie += ';secure';
+  }
+  document.cookie = cookie;
+}
+
+// Function to delete a cookie
+export const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; Max-Age=0; path=/; secure`;
+}
+
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: "https://api.aranasayesh.ir/api/",
   headers: {
     "Content-Type": "application/json",
-    // "Accept-Encoding": "gzip, compress, br",
-    // "Content-Encoding": "br"
   },
 });
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig<any>) => {
-    const accessToken: string | null = JSON.parse(
-      localStorage.getItem("accessToken")!
-    )!?.token;
+    const accessToken: string | null = getCookie("accessToken");
     if (accessToken) {
       config.headers!.Authorization = `Bearer ${accessToken}`;
     } else {
@@ -37,10 +55,9 @@ axiosInstance.interceptors.response.use(
       error.response.data.detail === "درخواست ناقص."
     ) {
       // Handle token expiration (e.g., logout)
-      localStorage.removeItem("accessToken");
-      // Redirect to logout or handle the logout process
+      deleteCookie("accessToken");
+      // handle the logout process
       delete error.config.headers.Authorization;
-      // window.location.href = '/logout';
     }
     return Promise.reject(error);
   }

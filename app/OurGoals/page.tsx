@@ -2,7 +2,7 @@ import React from "react";
 import ImageHomeHeaderLeft2 from "../assets/images/coffee.webp";
 import ImageHomeHeaderRight from "../assets/images/coffee2.webp";
 import ImageHomeHeaderLeft1 from "../assets/images/dentist.webp";
-import LazyImage from "../components/LazyImage";
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const OurGoals = () => {
   return (
@@ -12,7 +12,7 @@ const OurGoals = () => {
           <h1 className="text-[#7F38B7] self-center md:self-start text-3xl sm:text-4xl font-semibold">
             اهداف آران آسایش
           </h1>
-          <p className="text-base font-light text-[#303030] text-justify">
+          <p lang="fa" className="text-base font-light text-[#303030] text-justify">
             متخصصان مجموعه آران آسایش آفرینان با مطالعه روی معضل رکود و با هدف
             خروج از آن دور هم گرد آمده و با جمع‌آوری نتایج خود و تحقیقات میدانی،
             به راهکار این معضل دست پیدا کردند. یکی از نتایج جمع شدن متخصصان
@@ -33,15 +33,17 @@ const OurGoals = () => {
             آینده‌ای نزدیک با توکل به خداوند متعال هر هموطن ایرانی یک تخفیف کارت
             آران آسایش را خواهد داشت.
           </p>
-          <div className="flex justify-center">
+          <div className="flex justify-center w-full">
+            <section className="w-2/3">
             <LazyImage
               src={ImageHomeHeaderRight}
-              className="w-2/3 rounded-t-lg"
+              className="rounded-t-lg w-full h-full "
               alt="ImageHomeHeaderRight"
               width={"66.666667%"}
               height={"100%"}
             />
-            <div className="flex flex-col w-1/3">
+            </section>
+            <section className="flex flex-col w-1/3">
               <LazyImage
                 src={ImageHomeHeaderLeft1}
                 className="w-full rounded-t-lg"
@@ -56,7 +58,7 @@ const OurGoals = () => {
                 width={"100%"}
                 height={"100%"}
               />
-            </div>
+            </section>
           </div>
         </div>
       </section>

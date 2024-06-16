@@ -5,6 +5,7 @@ import UserProvider from "./api/Slices/UserSlice/userProvider";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import Header from "./components/Header";
 import FooterWithSocialLinks from "./components/footer";
+// import reportWebVitals from "./reportWebVitial"
 
 const RootLayout: React.FC = () => {
   return (
@@ -24,5 +25,7 @@ const RootLayout: React.FC = () => {
     </UserProvider>
   );
 };
+
+// reportWebVitals();
 
 export default RootLayout;

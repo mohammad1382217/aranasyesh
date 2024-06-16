@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import bg_admin from "../assets/images/bg-admin.webp";
-import FlowbiteListGroup from "../components/ListGroup";
+const FlowbiteListGroup = React.lazy(() => import("../components/ListGroup"));
 
 export const List = [
   // { title: "اطلاعات مجموعه", link: "/CCP/CCP" },
@@ -29,7 +29,9 @@ const RootLayoutAdmin = () => {
         </section>
         <div className="flex flex-col xl:flex-row container h-full mx-auto px-4 lg:px-8 gap-8">
           <section className="flex justify-center">
-            <FlowbiteListGroup List={List} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <FlowbiteListGroup List={List} />
+            </Suspense>
           </section>
           <section className="bg-white flex flex-col p-6 lg:p-8 rounded-2xl w-full sm:flex-col items-center justify-between gap-5">
             <Outlet />

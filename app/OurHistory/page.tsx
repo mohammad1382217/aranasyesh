@@ -1,6 +1,6 @@
 import React from "react";
 import coffee from "../assets/images/coffee.webp";
-import LazyImage from "../components/LazyImage";
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const OurHistory = () => {
   return (
@@ -12,7 +12,7 @@ const OurHistory = () => {
           </h1>
         </div>
         <div className="flex justify-between items-center flex-col lg:flex-row">
-          <div className="lg:w-6/12 px-7 md:px-0 lg:p-5">
+          <div className="w-full lg:w-6/12 px-7 md:px-0 lg:p-5">
             <LazyImage
               className="w-full md:h-80 lg:h-72"
               src={coffee}
@@ -22,14 +22,14 @@ const OurHistory = () => {
             />
           </div>
           <div className="lg:w-7/12 p-7 md:px-11 lg:p-5">
-            <p className="text-base font-light text-[#303030] text-justify md:text-sm lg:text-sm xl:text-base">
+            <p lang="fa" className="text-base font-light text-[#303030] text-justify md:text-sm lg:text-sm xl:text-base">
               مجوعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید دانشگاه
               و صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا مرادی مشغول
               فعالیت است. این مجموعه با راه‌اندازی شبکه سراسری تخفیف ایران با
               صرفه‌جویی در هزینه‌های جاری خانوار و حمایت از اقتصاد خانواده،
               مصداق بارزی از اقتصاد مقاومتی ارائه نموده است.
             </p>
-            <p className="text-base font-light text-[#303030] text-justify md:text-sm lg:text-sm xl:text-base mt-5 lg:mt-6 xl:mt-2">
+            <p lang="fa" className="text-base font-light text-[#303030] text-justify md:text-sm lg:text-sm xl:text-base mt-5 lg:mt-6 xl:mt-2">
               امروزه با توجه به شرایط اقتصادی حاکم بر کشور، پس‌انداز و صرفه‌جویی
               در هزینه‌های جاری و ضروری خانواده‌ها بیش از همیشه مورد توجه اقشار
               مختلف جامعه و سرپرست خانواده‌ها است. از طرفی صاحبان مشاغل و خدمات

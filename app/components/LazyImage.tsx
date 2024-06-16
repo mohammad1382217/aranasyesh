@@ -11,7 +11,8 @@ const Image: React.FC<Image> = ({
 }) => {
   const ref = React.useRef<HTMLImageElement>(null);
   const [inView, setInView] = React.useState(false);
-  let callback = (entries: any[], observer: any) => {
+
+  const callback: IntersectionObserverCallback = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         setInView(true);
@@ -20,7 +21,7 @@ const Image: React.FC<Image> = ({
   };
 
   React.useEffect(() => {
-    let observer = new IntersectionObserver(callback);
+    const observer = new IntersectionObserver(callback);
 
     if (ref?.current) {
       observer.observe(ref.current);
@@ -41,7 +42,7 @@ const Image: React.FC<Image> = ({
         onClick={onClick}
         ref={ref}
         loading={loading}
-        className={`${className}`}
+        className={`${className} w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden`}
         src={src}
         srcSet={`${src} 480w, ${src} 800w, ${src} 1200w`}
         sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
@@ -58,6 +59,7 @@ const Image: React.FC<Image> = ({
       style={{
         backgroundColor: "gray",
       }}
+      className="object-fill"
       sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
       width={width}
       height={height}

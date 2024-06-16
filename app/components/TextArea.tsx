@@ -1,6 +1,10 @@
-import { Textarea, CustomFlowbiteTheme } from "flowbite-react";
+import React from "react";
+import { type CustomFlowbiteTheme } from "flowbite-react";
+const Textarea = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Textarea }))
+);
 
-export const TextArea: React.FC<TextareaProps> = ({
+const TextArea: React.FC<TextareaProps> = ({
   TextAreaClass,
   MaxLength,
   Name,
@@ -25,6 +29,8 @@ export const TextArea: React.FC<TextareaProps> = ({
     />
   );
 };
+
+export default TextArea;
 
 // Types
 interface TextareaProps {

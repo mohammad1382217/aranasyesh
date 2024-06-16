@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import LineSpace from "../components/lineSpace";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
+import React, { lazy, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CardComponent from "../components/Card";
 import axiosInstance from "../api/apiConfig";
-import LazyImage from "../components/LazyImage";
+const LineSpace = lazy(() => import("../components/lineSpace"));
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
 
 const SubCategory: React.FC = () => {
   const [category, setCategory] = useState<Category>({
@@ -28,7 +28,7 @@ const SubCategory: React.FC = () => {
     ],
   });
 
-  let { Name, sub_categories_name } = useParams();
+  const { Name, sub_categories_name } = useParams();
 
   useEffect(() => {
     const fetchSubCategory = async () => {
@@ -72,7 +72,7 @@ const SubCategory: React.FC = () => {
             text={sub_categories_name!}
             icon={
               <LazyImage
-                className="w-7 h-7 my-10"
+                className="!w-7 !h-7 my-10"
                 src={category.category_detail.icon}
                 alt={sub_categories_name!}
                 width={28}
@@ -85,7 +85,7 @@ const SubCategory: React.FC = () => {
         </div>
         {category.companies.length > 0 ? (
           <>
-            <div className="space-y-10 justify-center justify-items-ceneter items-center content-center grid-cols-1 sm:gap-4 sm:space-y-0 grid grid-flow-row sm:grid-cols-2 lg:gap-8 lg:grid-cols-3 2xl:gap-10 2xl:grid-cols-4 px-6 lg:px-3 xl:px-4">
+            <div className="space-y-10 justify-center justify-items-ceneter items-center content-center grid-cols-1 sm:gap-4 sm:space-y-0 grid grid-flow-row sm:grid-cols-1 md:grid-cols-2 lg:gap-8 lg:grid-cols-3 2xl:gap-10 2xl:grid-cols-4 px-6 lg:px-3 xl:px-4">
               {category.companies.map((item: Company, index: number) => (
                 <CardComponent
                   key={index}

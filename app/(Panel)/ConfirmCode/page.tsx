@@ -1,21 +1,17 @@
-import { Button } from "flowbite-react";
-import Input from "../../components/input";
 import React, { useEffect, useReducer, useState } from "react";
-import {
-  Dialog,
-  DialogBody,
-} from "@material-tailwind/react";
-import {
-  DiscountHistoryReducer,
-  initialDiscountHistory,
-} from "../../api/Slices/DiscountHistorySlice/DiscountHistory";
+import { DiscountHistoryReducer, initialDiscountHistory } from "../../api/Slices/DiscountHistorySlice/DiscountHistory";
 import { postRepresentativeCode } from "../../api/postRepresentativeCode";
 import axiosInstance from "../../api/apiConfig";
-import { ScaleLoader } from "react-spinners";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import SubmitButton from "../../components/submitButton";
+
+const Button = React.lazy(() => import("flowbite-react").then(module => ({ default: module.Button })));
+const Input = React.lazy(() => import("../../components/input"));
+const Dialog = React.lazy(() => import("@material-tailwind/react/components/Dialog"));
+const DialogBody = React.lazy(() => import("@material-tailwind/react/components/Dialog/DialogBody"));
+const ScaleLoader = React.lazy(() => import("react-spinners").then(module => ({ default: module.ScaleLoader })));
+const Slider = React.lazy(() => import("react-slick").then(module => ({ default: module.default })));
+const SubmitButton = React.lazy(() => import("../../components/submitButton"));
 
 const ConfirmCode = () => {
   const [uuid, setuuid] = useState("");
@@ -260,7 +256,7 @@ const ConfirmCode = () => {
                 onClick={async () => {
                   try {
                     setLoading(true);
-                    const response = await axiosInstance.put(
+                    await axiosInstance.put(
                       `discount/${uuid}/update/`,
                       {
                         ...discountState,

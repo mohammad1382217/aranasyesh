@@ -1,7 +1,8 @@
-import React, { useEffect, useReducer } from "react";
-import MyAreaChart from "../../components/LineChart";
+import React, { Suspense, useEffect, useReducer } from "react";
 import { DiscountHistoryReducer, initialDiscountHistory } from "../../api/Slices/DiscountHistorySlice/DiscountHistory";
 import { fetchDiscountHistory } from "../../api/fetchDiscountHistory";
+
+const MyAreaChart = React.lazy(() => import("../../components/LineChart"));
 
 const DiscountHistory = () => {
   const [ReducerDiscount, dispatchDiscount]= useReducer(DiscountHistoryReducer,initialDiscountHistory);
@@ -17,7 +18,9 @@ const DiscountHistory = () => {
         </h1>
       </div>
       <section className="relative w-full flex flex-col items-center justify-between overflow-hidden">
-        <MyAreaChart DiscountHistory={ReducerDiscount}/>
+        <Suspense fallback={<div>Loading...</div>}>
+          <MyAreaChart DiscountHistory={ReducerDiscount}/>
+        </Suspense>
       </section>
     </>
   );

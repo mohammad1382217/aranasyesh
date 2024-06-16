@@ -1,16 +1,13 @@
-import React, { useReducer } from "react";
-import LineSpace from "../components/lineSpace";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
-import { useLocation, useParams } from "react-router-dom";
+import React, { lazy, useEffect } from "react";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import CardComponent from "../components/Card";
-import {
-  BannerReducer,
-  initialBanner,
-} from "../api/Slices/BannersSlice/Banners";
-import { HomeReducer, initialHome } from "../api/Slices/HomeSlice/Home";
-interface Category {
-  companies: Company[];
-}
+import axiosInstance from "../api/apiConfig";
+import axios, { CancelTokenSource } from "axios";
+import type { categoryItems } from "../api/Slices/HomeSlice/Home";
+
+const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
+
+const LineSpace = lazy(() => import("../components/lineSpace"));
 
 interface Company {
   id: number;
@@ -21,23 +18,42 @@ interface Company {
   company_image1: string;
 }
 const SearchPage: React.FC = () => {
-  let { Search } = useParams<string>();
+  const [searchParams] = useSearchParams();
+  const Search = searchParams.get("q");
+  console.log("search : ",Search)
+  const [searchData, setSearchData] = React.useState<categoryItems[]>([])
 
-  const [Banners, dispatchBanners] = useReducer(BannerReducer, initialBanner);
-  const [Categorie, dispatchCategorie] = useReducer(HomeReducer, initialHome);
-  const location = useLocation();
+  useEffect(()=> {
+    let cancelTokenSource: CancelTokenSource | null = null;
+
+    try {
+      cancelTokenSource = axios.CancelToken.source();
+    } catch (error) {
+      // Handle error if cancel token creation fails
+      console.error("Failed to create cancel token:", error);
+    }
+    const searchData = async () => {
+      if (!cancelTokenSource) return; // Exit if cancel token is null
+      const response = await axiosInstance.post("company/search/", {
+        company_name: Search,
+      },{
+        cancelToken: cancelTokenSource.token,
+      });
+      setSearchData(response.data)
+    }
+
+    searchData();
+    return () => {
+      if (cancelTokenSource) {
+        cancelTokenSource.cancel("Request canceled by cleanup");
+      }
+    }
+  })
   
-  const scrollToTop = (): void => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
   return (
     <>
       <section className="w-full py-10 bg-[#F5F5F5] flex flex-col justify-start items-center">
         <div className="container gap-4 mx-auto w-11/12 md:w-10/12 min-h-screen">
-          {/* {location.state.companies[0]((item:Company,index:number) => ( */}
           <div>
             <div className="w-full flex items-start justify-start rounded-2xl">
               <BreadcrumbsWithIcon
@@ -49,7 +65,6 @@ const SearchPage: React.FC = () => {
                 ]}
               />
             </div>
-            {/* {location.state.companies.length > 1 ? ( */}
             <LineSpace
               ClassName={"!justify-start -mr-2 my-10"}
               color={`#4A4A4A`}
@@ -63,11 +78,10 @@ const SearchPage: React.FC = () => {
               link={""}
             />
           </div>
-          {/* ))} */}
-          {location.state.length > 0 ? (
+          {searchData.length > 0 ? (
             <>
               <div className="space-y-10 justify-center justify-items-center items-center content-center grid-cols-1 sm:gap-4 sm:space-y-0 grid grid-flow-row sm:grid-cols-2 lg:gap-8 lg:grid-cols-3 2xl:gap-10 2xl:grid-cols-4">
-                {location.state.map(
+                {searchData.map(
                   (item: Company, index: number) => (
                     <CardComponent
                     Id={item.id}

@@ -1,18 +1,15 @@
-import React, { useEffect, useReducer, useState } from "react";
-import CardComponent from "../components/Card";
-import LineSpace from "../components/lineSpace";
-import { TextArea } from "../components/TextArea";
+import React, { lazy, useEffect, useReducer, useState } from "react";
+const LineSpace = lazy(() => import("../components/lineSpace"));
 import eitaa from "../assets/svg/eitaa.svg";
 import telegram from "../assets/svg/telegram.svg";
-import { Chip } from "@material-tailwind/react";
+import Chip from "@material-tailwind/react/components/Chip";
 import presentage from "../assets/svg/percentage_purple.svg";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   BannerReducer,
   initialBanner,
 } from "../api/Slices/BannersSlice/Banners";
-import axiosInstance from "../api/apiConfig";
+import axiosInstance, { getCookie } from "../api/apiConfig";
 import defaultImage from "../assets/images/default-placeholder.webp";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -23,7 +20,14 @@ import StarRating from "../components/Star";
 import { fetchSpecial } from "../api/fetchSpecial";
 import SubmitButton from "../components/submitButton";
 import Loading from "../components/loading";
-import LazyImage from "../components/LazyImage";
+import Video from "../components/video";
+
+const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const CardComponent = React.lazy(() => import("../components/Card"));
+const TextArea = React.lazy(() => import("../components/TextArea"));
+const BreadcrumbsWithIcon = React.lazy(
+  () => import("../components/BreadcrumbsWithIcon")
+);
 
 const Services = () => {
   const [company, setCompany] = useState<company>({
@@ -60,7 +64,6 @@ const Services = () => {
   const [Banners, dispatchBanners] = useReducer(BannerReducer, initialBanner);
   const [loading, setLoading] = useState(true);
   const [loadingOpinion, setLoadingOpinion] = useState(false);
-  const [LoadingMain, setLoadingMain] = useState(true);
   const [isValidOpinion, setIsValidOpinion] = useState(false);
   const [showCross, setshowCross] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("#8754AF");
@@ -72,79 +75,10 @@ const Services = () => {
     });
   };
 
-  // const [images, setImages] = useState([
-  //   company.company_image1 as string,
-  //   company.company_image2 as string,
-  //   company.company_image3 as string,
-  //   company.company_image4 as string,
-  //   company.company_image5 as string,
-  // ]);
   const [images, setImages] = useState<string[]>([]);
   const [mainImage, setMainImage] = useState(images[0]); // تصویر بزرگ اصلی
 
-  let { Id } = useParams<string>();
-  // slider
-  const settingsServices = {
-    nextArrow: <div className="hidden"></div>,
-    prevArrow: <div className="hidden"></div>,
-    className: "sliderServices",
-    rtl: true,
-    centerMode: true,
-    verticalSwiping: true,
-    autoplay: true,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-    vertical: true,
-    dots: false,
-    // infinite: true,
-    speed: 1000,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    adaptiveHeight: true,
-    // responsive: [
-    //   {
-    //     breakpoint: 1269,
-    //     settings: {
-    //       vertical: true,
-    //       slidesToShow: 3,
-    //     },
-    //   },
-    //   {
-    //     breakpoint: 959,
-    //     settings: {
-    //       vertical: true,
-    //       slidesToShow: 4,
-    //     },
-    //   },
-    //   {
-    //     breakpoint: 719,
-    //     settings: {
-    //       vertical: false,
-    //       slidesToShow: 3,
-    //     },
-    //   },
-    //   {
-    //     breakpoint: 569,
-    //     settings: {
-    //       vertical: false,
-    //       slidesToShow: 2,
-    //     },
-    //   },
-    //   {
-    //     breakpoint: 369,
-    //     settings: {
-    //       vertical: false,
-    //       slidesToShow: 1,
-    //     },
-    //   },
-    // ],
-    beforeChange: (current: number, next: number) => {
-      setLoadingMain(true);
-      setMainImage(images[next]);
-      setLoadingMain(false);
-      // setMainImage(images[next - 1]);
-    },
-  };
+  const { Id } = useParams<string>();
 
   useEffect(() => {
     setLoading(true);
@@ -161,23 +95,15 @@ const Services = () => {
           data.company_image4,
           data.company_image5,
         ]);
-        // console.log(response.data, data.company_image1);
-        // console.log(images);
       } catch (error) {
         console.log(error);
       }
     };
 
-    // setLoading(true);
-    Promise.allSettled([
-      fetchSpecial(dispatchBanners),
-      fetchData(),
-      // fetchcompany(dispatchCompany, +Id!),
-    ]);
+    Promise.allSettled([fetchSpecial(dispatchBanners), fetchData()]);
 
     setLoading(false);
   }, [Id]);
-  // console.log(images);
 
   const navigate = useNavigate();
   const [description, setDescription] = useState({ description: "" });
@@ -197,6 +123,7 @@ const Services = () => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
   };
+
   const settings = {
     dots: false,
     infinite: true,
@@ -251,14 +178,11 @@ const Services = () => {
       },
     ],
     verticalSwiping: true,
-    beforeChange: function (currentSlide: number, nextSlide: number) {
-      // console.log("before change", currentSlide, nextSlide);
+    beforeChange: (currentSlide: number) => {
       setMainImage(images[currentSlide]);
     },
-    // afterChange: function (currentSlide: number) {
-    //   console.log("after change", currentSlide);
-    // },
   };
+
   return (
     <>
       {loading === true ? (
@@ -327,7 +251,7 @@ const Services = () => {
                         <span className="ml-1 mr-1 text-base font-extralight text-[#717171]">
                           {company?.rate}
                         </span>
-                        {localStorage.getItem("accessToken") ? (
+                        {getCookie("accessToken") ? (
                           <StarRating
                             defaultValue={company?.user_status.rate}
                             onChange={async (value) => {
@@ -363,23 +287,23 @@ const Services = () => {
                 <div className="w-full flex flex-col gap-5">
                   <div className="w-full flex flex-col gap-5">
                     <div className="flex flex-col md:flex-row justify-center gap-5">
-                      <div className="flex md:w-3/4 h-44 md:h-[24rem]  md:mt-2 xl:h-[22rem] ">
+                      <div className="flex w-full md:w-3/4 h-44 md:h-[24rem] md:mt-2 xl:h-[22rem]">
                         {mainImage === "/media/img/default.jpg" || null ? (
                           <LazyImage
                             src={defaultImage}
-                            className="bg-cover rounded-xl w-full"
+                            className="bg-cover rounded-xl h-[176px] lg:h-[352px] md:h-[24rem] xl:h-[22rem]"
                             alt="Main"
-                            width={"100%"}
-                            height={"100%"}
+                            width={548}
+                            height={176}
                           />
                         ) : (
                           <>
                             <LazyImage
                               src={`https://api.aranasayesh.ir${mainImage}`}
-                              className="bg-cover rounded-xl w-full"
+                              className="bg-cover rounded-xl h-[176px] lg:h-[352px] md:h-[24rem] xl:h-[22rem]"
                               alt="Main"
-                              width={"100%"}
-                              height={"100%"}
+                              width={548}
+                              height={176}
                             />
                           </>
                         )}
@@ -387,107 +311,82 @@ const Services = () => {
                       <div className="flex slider-container flex-col w-full h-28 md:!h-72  md:w-1/4 md:gap-4 gap-2 lg:gap-0">
                         <Slider {...settings}>
                           <div>
-                            {images[2] === "/media/img/default.jpg" || null ? (
-                              <LazyImage
+                            {images[2] === "/media/img/default.jpg" ? (
+                              <img
                                 src={defaultImage}
                                 className="bg-cover object-cover rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
-                                alt={`Thumbnail 1`}
                                 onClick={() => setMainImage(images[2])}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             ) : (
-                              <LazyImage
+                              <img
                                 src={`https://api.aranasayesh.ir${images[2]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
-                                alt={`Thumbnail 1`}
+                                alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[2])}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             )}
                           </div>
                           <div>
-                            {images[1] === "/media/img/default.jpg" || null ? (
-                              <LazyImage
+                            {images[1] === "/media/img/default.jpg" ? (
+                              <img
                                 src={defaultImage}
                                 className="bg-cover object-cover rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 onClick={() => setMainImage(images[1])}
-                                alt={`Thumbnail 2`}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             ) : (
-                              <LazyImage
+                              <img
                                 src={`https://api.aranasayesh.ir${images[1]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
-                                alt={`Thumbnail 2`}
+                                alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[1])}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             )}
                           </div>
                           <div>
-                            {images[0] === "/media/img/default.jpg" || null ? (
-                              <LazyImage
+                            {images[0] === "/media/img/default.jpg" ? (
+                              <img
                                 src={defaultImage}
                                 className="bg-cover object-cover rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 onClick={() => setMainImage(images[0])}
-                                alt={`Thumbnail 3`}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             ) : (
-                              <LazyImage
+                              <img
                                 src={`https://api.aranasayesh.ir${images[0]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
-                                alt={`Thumbnail 3`}
+                                alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[0])}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             )}
                           </div>
                           <div>
-                            {images[4] === "/media/img/default.jpg" || null ? (
-                              <LazyImage
+                            {images[4] === "/media/img/default.jpg" ? (
+                              <img
                                 src={defaultImage}
                                 className="bg-cover object-cover rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 onClick={() => setMainImage(images[4])}
-                                alt={`Thumbnail 4`}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             ) : (
-                              <LazyImage
+                              <img
                                 src={`https://api.aranasayesh.ir${images[4]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
-                                alt={`Thumbnail 4`}
+                                alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[4])}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             )}
                           </div>
                           <div>
-                            {images[3] === "/media/img/default.jpg" || null ? (
-                              <LazyImage
+                            {images[3] === "/media/img/default.jpg" ? (
+                              <img
                                 src={defaultImage}
-                                className="bg-cover object-cover rounded-xl !w-full px-1 md:px-0 sm:my-2 md:my-1 h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
+                                className="bg-cover object-cover rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 onClick={() => setMainImage(images[3])}
-                                alt={`Thumbnail 5`}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             ) : (
-                              <LazyImage
+                              <img
                                 src={`https://api.aranasayesh.ir${images[3]}`}
-                                className="bg-cover object-fill rounded-xl !w-full px-1 md:px-0 sm:my-2 md:my-1 h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
+                                className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
+                                alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[3])}
-                                alt={`Thumbnail 5`}
-                                width={"100%"}
-                                height={"73.6px"}
                               />
                             )}
                           </div>
@@ -504,7 +403,10 @@ const Services = () => {
                         }}
                       />
                     </h3>
-                    <p className="text-base font-light text-[#303030] text-justify">
+                    <p
+                      lang="fa"
+                      className="text-base font-light text-[#303030] text-justify"
+                    >
                       <div
                         dangerouslySetInnerHTML={{
                           __html: company.description,
@@ -514,10 +416,10 @@ const Services = () => {
                   </div>
                   {company.video !== null ? (
                     <div className="flex h-80">
-                      <video
-                        controls
+                      <Video
                         src={`https://api.aranasayesh.ir${company.video}`}
                         className="bg-cover rounded-xl w-full"
+                        alt={"Services"}
                       />
                     </div>
                   ) : null}
@@ -528,7 +430,7 @@ const Services = () => {
                     <div className="lg:flex gap-4 text-[#7F38B7] justify-center hidden">
                       {company.telegram !== null ? (
                         <LazyImage
-                          className="w-6 h-6 cursor-pointer"
+                          className="!w-6 !h-6 cursor-pointer"
                           src={telegram}
                           alt="telegram"
                           onClick={() => openInNewTab(company.telegram)}
@@ -542,7 +444,7 @@ const Services = () => {
                           className="opacity-80 transition-opacity hover:opacity-100"
                         >
                           <svg
-                            className="h-6 w-6"
+                            className="!h-6 !w-6"
                             fill="currentColor"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
@@ -561,7 +463,7 @@ const Services = () => {
                           className="flex !flex-shrink-0 opacity-80 transition-opacity hover:opacity-100 cursor-pointer"
                         >
                           <LazyImage
-                            className="w-6 h-6"
+                            className="!w-6 !h-6"
                             src={eitaa}
                             alt=""
                             width={24}
@@ -576,7 +478,7 @@ const Services = () => {
                       {company.telegram !== null ? (
                         <Link to={company.telegram}>
                           <LazyImage
-                            className="w-6 h-6 cursor-pointer"
+                            className="!w-6 !h-6 cursor-pointer"
                             src={telegram}
                             alt=""
                             width={24}
@@ -587,7 +489,7 @@ const Services = () => {
                       {company.instagram !== null ? (
                         <Link to={company.instagram} className="cursor-pointer">
                           <svg
-                            className="h-6 w-6"
+                            className="!h-6 !w-6"
                             fill="currentColor"
                             viewBox="0 0 24 24"
                             aria-hidden="true"
@@ -607,7 +509,7 @@ const Services = () => {
                         {company.eita !== null ? (
                           <Link to={company.eita}>
                             <LazyImage
-                              className="w-6 h-6"
+                              className="!w-6 !h-6"
                               src={eitaa}
                               alt=""
                               width={24}
@@ -660,7 +562,7 @@ const Services = () => {
                       buttonBgColor={backgroundColor}
                       buttonText={buttonText}
                       onClick={async () => {
-                        if (localStorage.getItem("accessToken")) {
+                        if (getCookie("accessToken")) {
                           setLoadingOpinion(true);
                           setButtonText("در حال ارسال");
                           try {
@@ -714,7 +616,7 @@ const Services = () => {
                     text={"پیشنهادهای ویژه"}
                     icon={
                       <LazyImage
-                        className="w-7 h-7"
+                        className="!w-7 !h-7"
                         src={presentage}
                         alt={""}
                         width={28}

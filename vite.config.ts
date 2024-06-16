@@ -1,8 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
-import viteCompression from "vite-plugin-compression";
 import { visualizer } from "rollup-plugin-visualizer";
+import mkcert from "vite-plugin-mkcert";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
+import cssnano from "cssnano";
+import { createHtmlPlugin } from "vite-plugin-html";
 
 const manifestForPlugIn: Partial<VitePWAOptions> = {
   registerType: "autoUpdate",
@@ -52,43 +56,79 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA(manifestForPlugIn),
-    viteCompression({
-      threshold: 10240,
-      algorithm: "gzip",
-    }),
+    mkcert(),
     visualizer(),
+    createHtmlPlugin({
+      minify: true,
+    }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        purgecss: {
+          content: [
+            "./index.html",
+            "./app/**/*.{js,ts,jsx,tsx,mdx}",
+            "./app/components/**/*.{js,ts,jsx,tsx,mdx}",
+          ],
+        },
+      },
+      css: {
+        purgecss: {
+          content: [
+            "./index.html",
+            "./app/**/*.{js,ts,jsx,tsx,mdx}",
+            "./app/components/**/*.{js,ts,jsx,tsx,mdx}",
+          ],
+        },
+      },
+      tailwindcss: {
+        purgecss: {
+          content: [
+            "./index.html",
+            "./app/**/*.{js,ts,jsx,tsx,mdx}",
+            "./app/components/**/*.{js,ts,jsx,tsx,mdx}",
+          ],
+        },
+      },
+    },
+    postcss: {
+      plugins: [
+        tailwindcss(),
+        autoprefixer(),
+        ...(process.env.NODE_ENV === "production" ? [cssnano()] : []),
+      ],
+    },
+  },
+  resolve: {
+    alias: {
+      // اضافه کردن مسیر فونت به alias
+      "/font": "/public/font",
+    },
+  },
   build: {
     outDir: "dist",
     sourcemap: false,
-    modulePreload: {
-      resolveDependencies: (url, deps, context) => {
-        return [];
-      },
-    },
+    modulePreload: true,
     rollupOptions: {
       output: {
+        // Use a more efficient format for chunks
+        format: "esm",
         sourcemap: false,
-        // manualChunks: {
-        //   react: ["react", "react-dom"],
-        //   router: ["react-router-dom"],
-        //   materialTailwind: ["@material-tailwind/react"],
-        //   flowbiteReact: ["flowbite-react"],
-        //   axios: ["axios"],
-        //   recharts: ["recharts"],
-        //   // سایر کتابخانه‌های بزرگ در صورت نیاز
-        // },
       },
     },
     target: "esnext",
     minify: "terser",
+    cssMinify: true,
+    cssCodeSplit: true,
     terserOptions: {
       compress: {
+        unused: true,
+        dead_code: true,
+        module: true,
         drop_console: true,
         drop_debugger: true,
         pure_funcs: ["console.log"], // حذف console.log
-        unused: true,
-        dead_code: true,
       },
     },
   },

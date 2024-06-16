@@ -17,7 +17,7 @@ const CardProfile: React.FC<cardProfileProps> = ({
       </div>
       <div className="pt-6 flex items-center justify-between">
         <LazyImage
-          className="absolute xs:w-16 sm:w-16 lg:w-24"
+          className="absolute xs:!w-16 sm:!w-16 lg:!w-24"
           src={percentage_takhfif}
           alt=""
           width={96}

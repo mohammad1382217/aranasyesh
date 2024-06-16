@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useReducer } from "react";
-import CardProfile from "../components/CardProfile";
-import { BreadcrumbsWithIcon } from "../components/BreadcrumbsWithIcon";
-import FlowbiteListGroup from "../components/ListGroup";
 import { useNavigate } from "react-router-dom";
 import { List } from "../ProfileOne/page";
 import { UserContext, UserContextType } from "../api/Slices/UserSlice/userProvider";
 import userReducer, { initialUser } from "../api/Slices/UserSlice/userReducer";
 import { fetchProfile } from "../api/fetchProfile";
+import { deleteCookie } from "../api/apiConfig";
+
+const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
+const CardProfile = React.lazy(() => import("../components/CardProfile"));
+const FlowbiteListGroup = React.lazy(() => import("../components/ListGroup"));
 
 const ProfileTwo: React.FC = () => {
   const User = useContext(UserContext);
@@ -16,19 +18,19 @@ const ProfileTwo: React.FC = () => {
 
   useEffect(() => {
     // Check if account data is loaded and the id is valid
-    if (account!?.results.length > 0 && account!?.results[0]?.id !== 0) {
+    if (account?.results.length > 0 && account?.results[0]?.id !== 0) {
       const cleanupProfile = fetchProfile(
         dispatchUser,
-        account!?.results[0]?.id
+        account?.results[0]?.id
       );
       return cleanupProfile;
     }
-  }, [account!?.results[0]?.id]);
+  }, [account?.results[0]?.id]);
 
   const semiLengthCard = Math.ceil(UserState.profile!.discounts.length / 2);
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    deleteCookie("accessToken");
     setAccount({
       previous: null,
       page: 1,
@@ -36,7 +38,7 @@ const ProfileTwo: React.FC = () => {
       results: [],
     });
     setIsLoggedIn(false);
-    navigate("/Home");
+    navigate("/");
   };
 
   const List: List[] = [

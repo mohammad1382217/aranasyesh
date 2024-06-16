@@ -11,6 +11,7 @@ interface ProviderProps {
 
 const Provider = ({ children }: ProviderProps) => {
   const [categoryData, setCategoryData] = useState<category[]>([]);
+  const [isCategoryLoading, setIsCategoryLoading] = useState<boolean>(false);
 
   useEffect(() => {
     let cancelTokenSource: CancelTokenSource | null = null;
@@ -52,6 +53,8 @@ const Provider = ({ children }: ProviderProps) => {
       value={{
         categoryData,
         setCategoryData,
+        isCategoryLoading,
+        setIsCategoryLoading,
       }}
     >
       {children}

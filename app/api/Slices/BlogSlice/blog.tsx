@@ -45,7 +45,7 @@ export interface side {
 export interface CardBlog {
   id: number;
   title: string;
-  body: any;
+  body: string;
   created: string;
   cover: string;
   meta_title: string;
@@ -61,11 +61,11 @@ export interface blogs {
   previous: string | null;
   page: number;
   next: string | null;
-  results: Array<CardBlog>;
+  results: CardBlog[];
 }
 export interface blogPost {
   title: string;
-  body: any;
+  body: string;
   created: string;
   cover: string;
   meta_title: string;

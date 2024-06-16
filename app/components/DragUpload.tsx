@@ -1,6 +1,13 @@
-import { Button } from "@material-tailwind/react";
-import { FileInput, Label } from "flowbite-react";
-import { useRef } from "react";
+import React, { useRef } from "react";
+const Button = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Button }))
+);
+const FileInput = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.FileInput }))
+);
+const Label = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Label }))
+);
 
 const DragUpload: React.FC<DragUploadProps> = ({
   lable,
@@ -38,10 +45,10 @@ const DragUpload: React.FC<DragUploadProps> = ({
           </svg>
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center text-center">
-              <p className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 px-4 text-sm text-[#7F38B7] text-justify">
+              <p lang="fa" className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 px-4 text-sm text-[#7F38B7] text-justify">
                 لطفاً فایل خود را بکشید و رها کنید
               </p>
-              <p className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 text-xs text-[#7F38B7]">
+              <p lang="fa" className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 text-xs text-[#7F38B7]">
                 یا
               </p>
             </div>
@@ -57,7 +64,7 @@ const DragUpload: React.FC<DragUploadProps> = ({
               انتخاب فایل
             </Button>
             {selectedFile && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p lang="fa" className="text-xs text-gray-500 dark:text-gray-400">
                 {(selectedFile as File).name}
               </p>
             )}

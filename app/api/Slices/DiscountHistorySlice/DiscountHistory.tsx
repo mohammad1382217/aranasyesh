@@ -37,7 +37,7 @@ export const DiscountHistoryReducer = (
 
 // Types
 export interface DiscountHistoryState {
-  DiscountHistory: Array<string>;
+  DiscountHistory: string[];
   discountCode: {
     representative_code: string;
   };

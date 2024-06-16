@@ -1,12 +1,12 @@
-import { Button } from "@material-tailwind/react";
 import React from "react";
 import LazyImage from "./LazyImage";
+import Button from "@material-tailwind/react/components/Button";
 
 interface WorkwithUsCardProps {
   title: string;
   text: string;
   img: string;
-  handel: any;
+  handel: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const WorkwithUsCard: React.FC<WorkwithUsCardProps> = ({
@@ -29,13 +29,13 @@ const WorkwithUsCard: React.FC<WorkwithUsCardProps> = ({
       <div className="flex flex-col md:flex-row text-justify px-10 md:px-0">
         <LazyImage
           src={img}
-          className=" md:w-36 md:h-36 m-auto lg:p-5"
+          className="md:w-72 md:h-36 m-auto lg:p-5"
           alt="img"
           width={144}
           height={144}
         />
         <div className="md:m-2">
-          <p className="text-base font-light text-[#303030] text-justify">
+          <p lang="fa" className="text-base font-light text-[#303030] text-justify">
             {text}
           </p>
           <Button

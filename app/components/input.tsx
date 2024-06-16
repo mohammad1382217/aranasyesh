@@ -1,10 +1,12 @@
-import {
-  CustomFlowbiteTheme,
-  Flowbite,
-  FlowbiteTextInputSizes,
-  TextInput,
-} from "flowbite-react";
 import React from "react";
+import {
+  type CustomFlowbiteTheme,
+  type FlowbiteTextInputSizes,
+} from "flowbite-react";
+
+const TextInput = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.TextInput }))
+);
 
 const Input: React.FC<InputProps> = ({
   type,
@@ -19,7 +21,8 @@ const Input: React.FC<InputProps> = ({
   Icon,
   disabled,
   autofocus,
-  pattern,title
+  pattern,
+  title,
 }) => {
   const customTheme: CustomFlowbiteTheme["textInput"] = {
     base: "w-full",
@@ -36,8 +39,8 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <TextInput
-    pattern={pattern}
-    title={title}
+      pattern={pattern}
+      title={title}
       value={value}
       disabled={disabled}
       theme={customTheme}
@@ -57,9 +60,9 @@ const Input: React.FC<InputProps> = ({
 export default Input;
 
 interface InputProps {
-  value?:string;
+  value?: string;
   Name?: string;
-  title?:string;
+  title?: string;
   pattern?: string;
   disabled?: boolean;
   sizing?: keyof FlowbiteTextInputSizes;
@@ -70,5 +73,5 @@ interface InputProps {
   autofocus?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-  Icon?: any;
+  Icon?: React.FC<React.SVGProps<SVGSVGElement>>;
 }

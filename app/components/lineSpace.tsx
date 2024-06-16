@@ -11,7 +11,7 @@ const LineSpace: React.FC<LineSpaceProps> = ({
 }) => {
   return (
     <div
-      className={`w-full flex items-center justify-center px-6 lg:px-3 xl:px-4 ${ClassName}`}
+      className={`w-full flex items-center justify-center px-6 lg:px-3 xl:px-4 mt-10 ${ClassName}`}
       style={{ color: color }}
     >
       {icon}
@@ -27,7 +27,7 @@ const LineSpace: React.FC<LineSpaceProps> = ({
             className="flex-1 md:border-b-4 md:border-dotted md:border-3 sm:mx-3"
           ></div>
           <Link to={link}>
-            <button className="text-xs sm:text-sm font-thin text-[#4A4A4A]">
+            <button className="text-sm sm:text-lg font-thin text-[#4A4A4A]">
               {" "}
               مشاهده بیشتر <span className="mr-2">&gt;</span>
             </button>

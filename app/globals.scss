@@ -16,30 +16,6 @@
   box-sizing: border-box !important;
 }
 
-html {
-  line-height: 1.15;
-  -webkit-text-size-adjust: 100%;
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
-}
-
-main {
-  display: block;
-  height: 100vh;
-}
-
-body {
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
-  overflow-y: auto;
-}
-
-img {
-  object-fit: cover;
-}
-
 .card > div {
   width: 17rem;
   height: auto;

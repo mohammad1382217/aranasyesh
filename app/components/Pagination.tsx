@@ -11,7 +11,7 @@ interface Props {
   itemsPerPage: number;
 }
 
-const Pagination: React.FC<Props> = ({ itemsPerPage }) => {
+const Pagination: React.FC<Props> = () => {
   const [Blogs, dispatchBlogs] = useReducer(BlogReducer, initialBlog);
   useEffect(() => {
     const cleanupBanner = fetchBlogs(dispatchBlogs, "");

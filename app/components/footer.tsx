@@ -1,11 +1,14 @@
+
+import React from "react";
 import { Link } from "react-router-dom";
 import bazar from "../assets/svg/bazar.svg";
 import { HiDownload } from "react-icons/hi";
 import eitaa from "../assets/svg/eitaa.svg";
 import logo from "../assets/svg/logo-orginal.svg";
-import { Button, Typography } from "@material-tailwind/react";
+import Button from "@material-tailwind/react/components/Button";
+import Typography from "@material-tailwind/react/components/Typography";
 import qr_code from "../assets/images/aranasaysh-app-download.webp";
-import LazyImage from "./LazyImage";
+const LazyImage = React.lazy(() => import("./LazyImage"));
 
 const FooterWithSocialLinks = () => {
   const LINKS = [
@@ -49,7 +52,7 @@ const FooterWithSocialLinks = () => {
   };
 
   return (
-    <footer className="w-full h-auto">
+    <footer className="w-full">
       <section className="bg-[#ECECEC] w-full flex items-center justify-center py-6 lg:py-4">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col 2xl:flex-row justify-between gap-y-6 gap-x-20 py-8">
@@ -57,7 +60,7 @@ const FooterWithSocialLinks = () => {
               <div className="md:w-full flex items-center justify-center gap-2">
                 <LazyImage
                   loading="eager"
-                  className="xl:w-[79px] xl:h-[102px] w-[43px] h-[56px]"
+                  className="xl:!w-[79px] xl:!h-[102px] !w-[43px] !h-[56px]"
                   src={logo}
                   alt={"logo"}
                   width={43}
@@ -73,10 +76,8 @@ const FooterWithSocialLinks = () => {
                   آران آسایش آفرینان{" "}
                 </Typography>
               </div>
-              <p className="text-base font-light text-[#374151] text-justify">
-                مجوعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید
-                دانشگاه و صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا
-                مرادی مشغول فعالیت است.
+              <p lang="fa" className="text-base font-light text-[#374151] text-justify">
+              مجموعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید دانشگاه و صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا مرادی مشغول فعالیت است.
               </p>
             </div>
             <div className="flex flex-col lg:flex-row justify-between items-center lg:w-full gap-y-8">
@@ -135,7 +136,7 @@ const FooterWithSocialLinks = () => {
                     <LazyImage
                       loading="lazy"
                       src={bazar}
-                      className="w-8 h-8 sm:w-6 sm:h-6"
+                      className="!w-8 !h-8 sm:w-6 sm:h-6 ml-1"
                       width={32}
                       height={32}
                       alt="bazar"
@@ -148,7 +149,7 @@ const FooterWithSocialLinks = () => {
                 <LazyImage
                   loading="lazy"
                   src={qr_code}
-                  className="w-40 h-40 rounded-2xl"
+                  className="!w-40 !h-40 rounded-2xl"
                   width={160}
                   height={160}
                   alt="qr_code"
@@ -158,12 +159,12 @@ const FooterWithSocialLinks = () => {
           </div>
         </div>
       </section>
-      <section className="w-full bg-[#D9D9D9] flex items-center justify-center !py-5 lg:py-4">
+      <section className="w-full bg-[#F4F4F4] flex items-center justify-center !py-6 lg:py-4">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="w-full flex flex-col justify-between items-center xl:flex-row">
-            <p className="mb-4 text-center font-normal text-[#4D4D4D] xl:mb-0">
-              تمامی حقوق این وبسایت برای شرکت آران آسایش محفوظ است.
-            </p>
+          <div className="w-full flex flex-col justify-between items-center md:flex-row">
+            <h4 className="mb-5 text-center font-light text-[#4B5563] xl:mb-0">
+              کلیه حقوق این وبسایت متعلق به آران آسایش آفرینان است.
+            </h4>
             <div className="flex gap-4 text-purple-500 sm:justify-center items-center">
               <span
                 onClick={() => openInNewTab("https://eitaa.com/aranasayesh")}
@@ -172,7 +173,7 @@ const FooterWithSocialLinks = () => {
                 <LazyImage
                   loading="lazy"
                   src={eitaa}
-                  className="w-6 h-6"
+                  className="!w-6 !h-6"
                   alt="eitaa"
                   width={24}
                   height={24}

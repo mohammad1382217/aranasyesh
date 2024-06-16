@@ -1,25 +1,39 @@
 import DatePicker, { DateObject } from "react-multi-date-picker";
-import { CustomInputProps, weekDays } from "../../ProfileOne/page";
+import { type CustomInputProps, weekDays } from "../../ProfileOne/page";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import persian_en from "react-date-object/locales/persian_en";
 import noteText from "../../assets/svg/note-text.svg";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
-import { useReducer, useState } from "react";
+import { Suspense, useReducer, useState } from "react";
 import { fetchSpecific_date } from "../../api/fetchSpecific_date";
 import {
   initialtransactionData,
   transactionDataReducer,
 } from "../../api/Slices/SelectDateSlice/SelectDate";
-import LazyImage from "../../components/LazyImage";
+import React from "react";
+
+const Button = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Button }))
+);
+const Table = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Table }))
+);
+const TableBody = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.TableBody }))
+);
+const TableCell = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.TableCell }))
+);
+const TableHead = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.TableHead }))
+);
+const TableHeadCell = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.TableHeadCell }))
+);
+const TableRow = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.TableRow }))
+);
+const LazyImage = React.lazy(() => import("../../components/LazyImage"));
 
 const theme = {
   root: {
@@ -57,7 +71,7 @@ const DateInput: React.FC<CustomInputProps> = ({
     <div className="inline-flex items-center">
       <LazyImage
         onClick={onFocus as React.MouseEventHandler<HTMLImageElement>}
-        className="relative right-8 cursor-pointer w-7 h-7"
+        className="relative right-8 cursor-pointer !w-7 !h-7"
         src={noteText}
         alt=""
         loading={undefined}
@@ -84,7 +98,7 @@ const SelectDate: React.FC = () => {
     transactionDataReducer,
     initialtransactionData
   );
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState<DateObject | null>();
   return (
     <>
       <div className="w-full flex items-center justify-between gap-4">
@@ -103,7 +117,7 @@ const SelectDate: React.FC = () => {
               name={"date"}
               value={date}
               render={<DateInput />}
-              onChange={(date: any) => {
+              onChange={(date: DateObject) => {
                 setDate(date);
                 if (date instanceof DateObject) {
                   // handleChange(date)
@@ -135,60 +149,62 @@ const SelectDate: React.FC = () => {
               onClick={() => {
                 fetchSpecific_date(dispatchTransactionData, "");
                 setShowTable(!showTable);
-                setDate("");
+                setDate(null);
               }}
             >
               مشاهده 20 تراکنش اخیر
             </Button>
           </div>
           <div className="w-full overflow-x-auto">
-            <Table
-              theme={theme}
-              className="w-[50rem] lg:!w-full overflow-x-scroll"
-              striped
-            >
-              <TableHead className="bg-[#8754AF] w-full">
-                {[
-                  "ردیف",
-                  "تاریخ تراکنش",
-                  "نام",
-                  "نام خانوادگی",
-                  "کد کاربری",
-                  "قیمت سرویس",
-                  "تخفیف",
-                  "قیمت با تخفیف",
-                ].map((name) => (
-                  <TableHeadCell
-                    key={name}
-                    className="bg-[#8754AF] text-white text-center px-3"
-                  >
-                    {name}
-                  </TableHeadCell>
-                ))}
-              </TableHead>
-              <TableBody className="divide-y !w-auto ">
-                {transaction.transactionData.map((item, index) => (
-                  <TableRow key={index} className="bg-blue-gray-600 ">
-                    <TableCell className="right">{index + 1}</TableCell>
-                    <TableCell className="right">{item.created}</TableCell>
-                    <TableCell className="right">{item.first_name}</TableCell>
-                    <TableCell className="right">{item.last_name}</TableCell>
-                    <TableCell className="right">
-                      {item.customer_code}
-                    </TableCell>
-                    <TableCell className="right">
-                      {item.original_price}
-                    </TableCell>
-                    <TableCell className="right">
-                      {item.discount} درصد
-                    </TableCell>
-                    <TableCell className="right">
-                      {item.discount_price}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Table
+                theme={theme}
+                className="w-[50rem] lg:!w-full overflow-x-scroll"
+                striped
+              >
+                <TableHead className="bg-[#8754AF] w-full">
+                  {[
+                    "ردیف",
+                    "تاریخ تراکنش",
+                    "نام",
+                    "نام خانوادگی",
+                    "کد کاربری",
+                    "قیمت سرویس",
+                    "تخفیف",
+                    "قیمت با تخفیف",
+                  ].map((name) => (
+                    <TableHeadCell
+                      key={name}
+                      className="bg-[#8754AF] text-white text-center px-3"
+                    >
+                      {name}
+                    </TableHeadCell>
+                  ))}
+                </TableHead>
+                <TableBody className="divide-y !w-auto ">
+                  {transaction.transactionData.map((item, index) => (
+                    <TableRow key={index} className="bg-blue-gray-600 ">
+                      <TableCell className="right">{index + 1}</TableCell>
+                      <TableCell className="right">{item.created}</TableCell>
+                      <TableCell className="right">{item.first_name}</TableCell>
+                      <TableCell className="right">{item.last_name}</TableCell>
+                      <TableCell className="right">
+                        {item.customer_code}
+                      </TableCell>
+                      <TableCell className="right">
+                        {item.original_price}
+                      </TableCell>
+                      <TableCell className="right">
+                        {item.discount} درصد
+                      </TableCell>
+                      <TableCell className="right">
+                        {item.discount_price}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Suspense>
           </div>
         </div>
       </section>

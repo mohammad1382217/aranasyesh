@@ -1,13 +1,11 @@
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Typography,
-} from "@material-tailwind/react";
 import React from "react";
+import Typography from "@material-tailwind/react/components/Typography";
+import Card from "@material-tailwind/react/components/Card";
+import CardBody from "@material-tailwind/react/components/Card/CardBody";
+import CardFooter from "@material-tailwind/react/components/Card/CardFooter";
 import LazyImage from "./LazyImage";
 
-export const SimpleCard: React.FC<SimpleCardProps> = ({
+const SimpleCard: React.FC<SimpleCardProps> = ({
   header,
   headerClass,
   text,
@@ -30,7 +28,13 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
       >
-        <LazyImage className={`absolute ${ImageClass}`} src={Image!} alt="" width={240} height={176} />
+        <LazyImage
+          className={`absolute !w-32 !h-24 xs:w-28 xs:h-20 ${ImageClass}`}
+          src={Image!}
+          alt=""
+          width={180}
+          height={148}
+        />
         <Typography
           variant="h5"
           color="white"
@@ -62,6 +66,8 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
     </Card>
   );
 };
+
+export default SimpleCard;
 
 // Types
 interface SimpleCardProps {

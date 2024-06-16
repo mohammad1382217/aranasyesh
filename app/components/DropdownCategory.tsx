@@ -1,7 +1,15 @@
 import React, { useContext } from "react";
 import Context, { ContextType } from "../api/context";
-import { CustomFlowbiteTheme, Dropdown, DropdownItem } from "flowbite-react";
+import { type CustomFlowbiteTheme } from "flowbite-react/dist/types/index";
 import { useNavigate } from "react-router-dom";
+
+const Dropdown = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.Dropdown }))
+);
+
+const DropdownItem = React.lazy(() =>
+  import("flowbite-react").then((module) => ({ default: module.DropdownItem }))
+);
 
 const DropdownCategory = () => {
   const Theme: CustomFlowbiteTheme["dropdown"] = {

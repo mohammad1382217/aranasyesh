@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Estedad-FD';
-  src: url('./assets/font/Estedad-FD-Regular.woff2') format('woff2');
-  font-display: swap;
+  src: url('/font/Estedad-FD-Regular.woff2') format('woff2');
+  font-display: optional;
 }
 
 $font-family-Estedad-FD:"Estedad-FD";
@@ -10,4 +10,5 @@ $font-family-Estedad-FD:"Estedad-FD";
   font-family: "Roboto" !important;
   font-weight: 400;
   font-style: italic;
+  font-display: optional;
 }
