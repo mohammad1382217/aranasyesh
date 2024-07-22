@@ -6,14 +6,9 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  Label,
+  ResponsiveContainer
 } from "recharts";
-
-const ResponsiveContainer = React.lazy(() =>
-  import("recharts").then((module) => ({ default: module.ResponsiveContainer }))
-);
-const Label = React.lazy(() =>
-  import("recharts").then((module) => ({ default: module.Label }))
-);
 
 const MyAreaChart = (DiscountHistory: { DiscountHistory: { DiscountHistory: any[]; }; }) => {
   // تولید داده‌ها برای نمونه

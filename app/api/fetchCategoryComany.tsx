@@ -3,7 +3,7 @@ import { Action } from "./Slices/HomeSlice/Home";
 import { Dispatch } from "react";
 import axiosInstance from "./apiConfig";
 
-export const fetchCategoryCompany = (
+const fetchCategoryCompany = (
   dispatch: Dispatch<Action>,
   Name: string | undefined,
   page: string | undefined,
@@ -48,3 +48,5 @@ export const fetchCategoryCompany = (
     }
   };
 };
+
+export default fetchCategoryCompany;

@@ -1,8 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-const Card = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Card }))
-);
+import { Link } from "react-router-dom/dist";
+const Card = React.lazy(() => import("../components/flowbite-react/card"));
 
 const CardComponentBlog: React.FC<CardBlog> = ({
   text,
@@ -26,9 +24,9 @@ const CardComponentBlog: React.FC<CardBlog> = ({
       imgSrc={img}
       imgAlt=""
     >
-      <h5 className="text-lg font-normal mr-5 lg:mr-2 tracking-tight text-[#303030] dark:text-white self-start pr-2">
+      <h2 className="text-lg font-normal mr-5 lg:mr-2 tracking-tight text-[#303030] dark:text-white self-start pr-2">
         {title}
-      </h5>
+      </h2>
       <div className="text-sm flex px-5 lg:px-2 flex-row font-light text-[#303030] text-justify w-full -mt-2">
         <div dangerouslySetInnerHTML={{ __html: text.slice(0, 50) }} />
       </div>

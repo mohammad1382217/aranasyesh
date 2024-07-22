@@ -3,7 +3,7 @@ import { Action } from "./Slices/HomeSlice/Home";
 import { Dispatch } from "react";
 import axiosInstance from "./apiConfig";
 
-export const fetchBlogPost = (dispatch: Dispatch<Action>,id?:string): (() => void) => {
+const fetchBlogPost = (dispatch: Dispatch<Action>,id?:string): (() => void) => {
   let cancelTokenSource: CancelTokenSource | null = null;
 
   try {
@@ -41,3 +41,5 @@ export const fetchBlogPost = (dispatch: Dispatch<Action>,id?:string): (() => voi
     }
   };
 };
+
+export default fetchBlogPost;

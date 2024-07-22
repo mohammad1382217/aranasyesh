@@ -1,6 +1,6 @@
 import React from "react";
 import displayloading from "../assets/images/loading.webp";
-import { CgSpinner } from "react-icons/cg";
+const CgSpinner = React.lazy(() => import("../components/icons/CgSpinner"));
 
 const Loading = () => {
   return (

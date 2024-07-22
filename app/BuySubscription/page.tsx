@@ -5,7 +5,7 @@ import Firooze from "../assets/svg/cyan-diamond.svg";
 import diamond from "../assets/svg/Beautiful-diamond.svg";
 import appMobile from "../assets/images/appMobile.webp";
 import credit from "../assets/svg/credit-cards-desktop.svg";
-import { fetchProduct } from "../api/fetchProduct";
+import fetchProduct from "../api/fetchProduct";
 import {
   ProductReducer,
   initialProduct,
@@ -18,14 +18,12 @@ import logo from "../assets/svg/logo-orginal.svg";
 import { initialLogin, LoginReducer } from "../api/Slices/LoginSlice/Login";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { LuUser2 } from "react-icons/lu";
 import { smsStates } from "../components/Header";
-import {
-  UserContext,
-  UserContextType,
-} from "../api/Slices/UserSlice/userProvider";
+import { useAuth } from "../api/authContext";
+import UserService from "../api/fetchAccount";
 
 // Lazy load the components
+const LuUser2 = React.lazy(() => import("../components/icons/LuUser2"));
 const SimpleCard = React.lazy(() => import("../components/simpleCard"));
 const Button = React.lazy(
   () => import("@material-tailwind/react/components/Button")
@@ -47,12 +45,12 @@ const SubmitButton = React.lazy(() => import("../components/submitButton"));
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const BuySubscription = () => {
-  const User = useContext(UserContext);
-  const { account, isLoggedIn, setIsLoggedIn } = User as UserContextType;
+  const [buttonText, setButtonText] = useState("ادامه");
   const [ProductState, dispatchProduct] = useReducer(
     ProductReducer,
     initialProduct
   );
+  const { isLoggedIn, account, dispatch } = useAuth();
   const [HomeState, dispatchHome] = useReducer(HomeReducer, initialHome);
   const [isSendSms, setisSendSms] = React.useState(false);
   const firstInputRef = React.useRef<HTMLInputElement>(null);
@@ -66,6 +64,12 @@ const BuySubscription = () => {
   const [showCross, setShowCross] = useState(false);
   const [background, setBackground] = useState("#8754AF");
   const [isValid, setIsValid] = useState(false);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Enter" && !loading && !isValid && !showCross) {
+      handlepostPhoneNumber();
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -103,7 +107,7 @@ const BuySubscription = () => {
     setLoading(true);
     try {
       await axiosInstance.post(
-        "account/",
+        "account?/",
         LoginState.PhoneNumber
       );
       setLoading(false);
@@ -151,7 +155,7 @@ const BuySubscription = () => {
       setLoadingSms(true);
       try {
         const response = await axiosInstance.post(
-          "account/otp-valid/",
+          "account?/otp-valid/",
           loginState,
           {
             cancelToken: cancelTokenSource.token,
@@ -178,7 +182,7 @@ const BuySubscription = () => {
       isLoggedIn = await loginUser(LoginState.smsStates);
     }
 
-    setIsLoggedIn(isLoggedIn);
+    dispatch({ type: 'SET_LOGGED_IN', payload: isLoggedIn});
 
     if (isLoggedIn) {
       showModalLogin();
@@ -246,7 +250,6 @@ const BuySubscription = () => {
           }
         );
         const data = response.data;
-        console.log(data);
         setCookie("uuid", data.uuid, 0.5, true);
         window.location.replace(data.url);
       } catch (error) {
@@ -288,7 +291,7 @@ const BuySubscription = () => {
                   در نقاط مختلف کشور عزیزمان وارد مذاکره شده و قراردادهایی را
                   امضا کرده است.
                 </div>
-                <p lang="fa" className="text-base font-light text-[#303030] text-justify">
+                <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify">
                   محصول تیم خلاق آران آسایش آفرینان یعنی کارت تخفیف آران آسایش،
                   حامی اقتصاد خانوار بوده و تلاش شده تا یک مجموعه جامع و یکپارچه
                   از محصولات و خدمات متنوع حوزه‌های سلامت، تفریحی، رفاهی و خماتی
@@ -296,7 +299,7 @@ const BuySubscription = () => {
                   اعتماد کامل از این سامانه که متعلق به خودتان است بهره‌مند
                   شوید.
                 </p>
-                <p lang="fa" className="text-base font-light text-[#303030] text-justify mt-6 ">
+                <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify mt-6 ">
                   شما میتوانید با استفاده از شماره کارت یا شبای موجود، هزینه را
                   برایمان واریز کنید و بعد از واریز با شماره های موجود تماس
                   گرفته تا اشتراک شما برایتان فعال شود.
@@ -337,9 +340,9 @@ const BuySubscription = () => {
                       <h2 className="xs:text-3xl text-4xl text-[#C5C1FF] mb-6">
                         اشتراک {product?.name}
                       </h2>{" "}
-                      <h4 className="xs:text-xl text-2xl mb-10">
+                      <h2 className="xs:text-xl text-2xl mb-10">
                         با یک تیر، چند نشان بزنید!
-                      </h4>
+                      </h2>
                     </div>
                     <h2 className="roboto-regular-italic text-9xl text-[#C5C1FF] absolute right-72 xl:right-[34rem] -top-3 hidden lg:block opacity-20">
                       Diamond
@@ -368,8 +371,8 @@ const BuySubscription = () => {
                     onPointerLeaveCapture={undefined}
                     disabled={
                       isLoggedIn
-                        ? account.results[0].subscription.is_buy
-                          ? account.results[0].subscription.name !== ""
+                        ? account?.results[0].subscription.is_buy
+                          ? account?.results[0].subscription.name !== ""
                             ? true
                             : false
                           : false
@@ -377,8 +380,8 @@ const BuySubscription = () => {
                     }
                   >
                     {isLoggedIn
-                      ? account.results[0].subscription.is_buy
-                        ? account.results[0].subscription.name !== ""
+                      ? account?.results[0].subscription.is_buy
+                        ? account?.results[0].subscription.name !== ""
                           ? "شما اشتراک دارید"
                           : "خرید اشتراک"
                         : "خرید اشتراک"
@@ -419,7 +422,7 @@ const BuySubscription = () => {
                       onPointerLeaveCapture={undefined}
                       disabled={
                         true
-                        //   account!.results[0].subscription.is_buy ?  true : false
+                        //   account?!.results[0].subscription.is_buy ?  true : false
                       }
                     >
                       {isLoggedIn ? "بزودی" : "ابتدا وارد شوید"}
@@ -456,7 +459,7 @@ const BuySubscription = () => {
                       onPointerLeaveCapture={undefined}
                       disabled={
                         true
-                        //   account!.results[0].subscription.is_buy ?  true : false
+                        //   account?!.results[0].subscription.is_buy ?  true : false
                       }
                     >
                       {isLoggedIn ? "بزودی" : "ابتدا وارد شوید"}
@@ -493,8 +496,8 @@ const BuySubscription = () => {
                       onPointerLeaveCapture={undefined}
                       disabled={
                         isLoggedIn
-                          ? account.results[0].subscription.is_buy
-                            ? account.results[0].subscription.name !== ""
+                          ? account?.results[0].subscription.is_buy
+                            ? account?.results[0].subscription.name !== ""
                               ? true
                               : false
                             : false
@@ -502,8 +505,8 @@ const BuySubscription = () => {
                       }
                     >
                       {isLoggedIn
-                        ? account.results[0].subscription.is_buy
-                          ? account.results[0].subscription.name !== ""
+                        ? account?.results[0].subscription.is_buy
+                          ? account?.results[0].subscription.name !== ""
                             ? "شما اشتراک دارید"
                             : "خرید اشتراک"
                           : "خرید اشتراک"
@@ -522,7 +525,7 @@ const BuySubscription = () => {
                 <h1 className="self-center md:self-start text-3xl sm:text-4xl font-semibold">
                   نحوه استفاده از اشتراک تخفیف آران آسایش
                 </h1>
-                <p lang="fa" className="text-base font-light text-[#303030] text-justify pt-8 pb-10">
+                <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify pt-8 pb-10">
                   محصول تیم خلاق آران آسایش آفرینان یعنی کارت تخفیف آران آسایش،
                   حامی اقتصاد خانوار بوده و تلاش شده تا یک مجموعه جامع و یکپارچه
                   از محصولات و خدمات متنوع حوزه‌های سلامت، تفریحی، رفاهی و خماتی
@@ -539,7 +542,7 @@ const BuySubscription = () => {
                   variant="outlined"
                   value="قدم یکم"
                 />
-                <p lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
+                <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
                   ابتدا نرم‌افزار آران آسایش را از اینجا دانلود کرده و سپس طبق
                   تصویر، وارد پنل کاربری خود شوید.
                 </p>
@@ -559,7 +562,7 @@ const BuySubscription = () => {
                   variant="outlined"
                   value="قدم دوم"
                 />
-                <p lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
+                <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
                   ابتدا نرم‌افزار آران آسایش را از اینجا دانلود کرده و سپس طبق
                   تصویر، وارد پنل کاربری خود شوید.
                 </p>
@@ -579,7 +582,7 @@ const BuySubscription = () => {
                   variant="outlined"
                   value="قدم سوم"
                 />
-                <p lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
+                <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify mb-4">
                   ابتدا نرم‌افزار آران آسایش را از اینجا دانلود کرده و سپس طبق
                   تصویر، وارد پنل کاربری خود شوید.
                 </p>
@@ -598,232 +601,250 @@ const BuySubscription = () => {
         </section>
       </div>
       <Dialog
+      placeholder={undefined}
+      onPointerEnterCapture={undefined}
+      onPointerLeaveCapture={undefined}
+      open={HomeState.isShowModalHandler}
+      handler={showModalLogin}
+      className="!w-auto !max-w-[90%] sm:!min-w-96"
+    >
+      <DialogBody
+        className="h-[30rem] !w-auto"
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
-        open={HomeState.isShowModalHandler}
-        handler={showModalLogin}
-        className="!w-auto !max-w-[90%] sm:!min-w-96"
       >
-        <DialogBody
-          className="h-auto w-auto"
+        <div className="flex items-center justify-center w-full p-2 py-4">
+          <LazyImage
+            className="!w-20 !h-[102px]"
+            src={logo}
+            alt={"logo"}
+            width={79}
+            height={102}
+          />
+          <h1 className="text-2xl xs:text-xl font-semibold text-[#8754AF] mr-3">
+            آران آسایش آفرینان
+          </h1>
+        </div>
+        <div className="flex-1 border-[#ECECEC] border-t-2"></div>
+        {isSendSms === false ? (
+          <div className="px-2 mt-5">
+            <div className="flex p-3">
+              <LuUser2 color="#8754AF" size={26} />
+              <span className="text-[#8754AF] text-xl font-semibold mr-2">
+                ورود یا ثبت‌نام
+              </span>
+            </div>
+            <h2 className="text-base font-light text-[#717171] py-2">
+              لطفاً شماره همراه خود را وارد نمایید
+            </h2>
+            <Input
+              Name="phone_number"
+              sizing="md"
+              type="text"
+              ClassName="w-full"
+              placeholder="شماره همراه"
+              autofocus
+              onChange={(e) => {
+                dispatchLogin({
+                  type: "setPhoneNumber",
+                  payload: { key: e.target.name, value: e.target.value },
+                });
+                dispatchLogin({
+                  type: "setsmsStatesOTP",
+                  payload: { key: e.target.name, value: e.target.value },
+                });
+                dispatchLogin({
+                  type: "setsmsStates",
+                  payload: { key: e.target.name, value: e.target.value },
+                });
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handlepostPhoneNumber(); // تابعی که می‌خواهید اجرا شود را فراخوانی کنید
+                }
+              }}
+            />
+            <SubmitButton
+              loading={loading}
+              isValid={isValid}
+              buttonText={buttonText}
+              showCross={showCross}
+              buttonBgColor={background}
+              onClick={handlepostPhoneNumber}
+              onKeyUp={handleKeyDown}
+            />
+          </div>
+        ) : (
+          <div className="px-2 mt-5 h-auto">
+            <div className="flex p-3">
+              <LuUser2 color="#8754AF" size={26} />
+              <span className="text-[#8754AF] text-xl font-semibold mr-2">
+                ورود یا ثبت‌نام
+              </span>
+            </div>
+            <h2 className="text-base font-light text-[#717171] p-2">
+              کد پیامک شده را وارد نمایید
+            </h2>
+            <form className="flex items-center flex-row-reverse justify-between mb-4 w-full">
+              <MaterialInput
+                maxLength={1}
+                autoComplete="off"
+                dir="ltr"
+                name="code1"
+                size="md"
+                autoFocus
+                className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
+                labelProps={{
+                  className: "hidden",
+                }}
+                containerProps={{
+                  className: "inline-flex w-auto min-w-[40px] !w-[40px]",
+                }}
+                crossOrigin={undefined}
+                onKeyUp={handleInputFocus}
+                ref={firstInputRef}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+                onChange={(e) => handleChange(e)}
+              />
+              <MaterialInput
+                maxLength={1}
+                dir="ltr"
+                size="md"
+                name="code2"
+                className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8] placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
+                labelProps={{
+                  className: "hidden",
+                }}
+                containerProps={{
+                  className: "inline-flex w-auto min-w-[40px] !w-[40px]",
+                }}
+                crossOrigin={undefined}
+                onKeyUp={handleInputFocus}
+                ref={secondInputRef}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+                onChange={(e) => handleChange(e)}
+              />
+              <MaterialInput
+                maxLength={1}
+                dir="ltr"
+                size="md"
+                name="code3"
+                className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
+                labelProps={{
+                  className: "hidden",
+                }}
+                containerProps={{
+                  className: "inline-flex w-auto min-w-[40px] !w-[40px]",
+                }}
+                crossOrigin={undefined}
+                onKeyUp={handleInputFocus}
+                ref={thirdInputRef}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+                onChange={(e) => handleChange(e)}
+              />
+              <MaterialInput
+                maxLength={1}
+                dir="ltr"
+                name="code4"
+                size="md"
+                className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
+                labelProps={{
+                  className: "hidden",
+                }}
+                containerProps={{
+                  className: "inline-flex w-auto min-w-[40px] !w-[40px]",
+                }}
+                crossOrigin={undefined}
+                onKeyUp={handleInputFocus}
+                ref={fourthInputRef}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+                onChange={(e) => handleChange(e)}
+              />
+              <MaterialInput
+                maxLength={1}
+                dir="ltr"
+                name="code5"
+                size="md"
+                className="text-center -ml-10 !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
+                labelProps={{
+                  className: "hidden",
+                }}
+                containerProps={{
+                  className: "inline-flex w-auto min-w-[40px] !w-[40px]",
+                }}
+                crossOrigin={undefined}
+                onKeyUp={handleInputFocus}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    // اینجا کدی که می‌خواهید هنگام فشردن Enter انجام شود را قرار دهید
+                    handlePostOtpValid(); // تابعی که می‌خواهید اجرا شود را فراخوانی کنید
+                  }
+                }}
+                ref={fifthInputRef}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+                onChange={(e) => {
+                  handleChange(e);
+                  dispatchLogin({
+                    type: "setOtp",
+                  });
+                }}
+              />
+            </form>
+            <Input
+              Name="customer_code"
+              sizing="md"
+              type="text"
+              ClassName="w-full"
+              placeholder="کد معرف"
+              onChange={(e) => {
+                dispatchLogin({
+                  type: "setsmsStates",
+                  payload: { key: e.target.name, value: e.target.value },
+                });
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  // اینجا کدی که می‌خواهید هنگام فشردن Enter انجام شود را قرار دهید
+                  handlePostOtpValid(); // تابعی که می‌خواهید اجرا شود را فراخوانی کنید
+                }
+              }}
+            />
+            {error ? (
+              <div className="text-red-500 text-sm p-1">
+                {"لطفا کد پیامکی را کامل وارد کنید"}
+              </div>
+            ) : null}
+            <SubmitButton
+              loading={loadingSms}
+              isValid={isValid}
+              buttonText={buttonText}
+              showCross={showCross}
+              buttonBgColor={background}
+              onClick={handlePostOtpValid}
+              // onKeyUp={handleKeyDown}
+            />
+          </div>
+        )}
+
+        <Button
+          className="bg-[#ECECEC] w-full mt-3 rounded-t-none !absolute right-0 bottom-0 py-3 text-[#717171] text-base font-light"
+          onClick={() => {
+            isSendSms === false ? showModalLogin() : setisSendSms(false);
+          }}
           placeholder={undefined}
           onPointerEnterCapture={undefined}
           onPointerLeaveCapture={undefined}
         >
-          <div className="flex items-center justify-center w-full p-2 py-4">
-            <LazyImage
-              src={logo}
-              className="!w-14 h-auto"
-              alt=""
-              width={56}
-              height={56}
-            />
-            <h1 className="text-2xl font-semibold text-[#8754AF] mr-3">
-              آران آسایش
-            </h1>
-          </div>
-          <div className="flex-1 border-[#ECECEC] border-t-2"></div>
-          {isSendSms === false ? (
-            <div className="px-10 mt-5">
-              <div className="flex p-3">
-                <LuUser2 color="#8754AF" size={26} />
-                <span className="text-[#8754AF] text-xl font-semibold mr-2">
-                  ورود یا ثبت‌نام
-                </span>
-              </div>
-              <h2 className="text-base font-light text-[#717171] py-2">
-                لطفاً شماره همراه خود را وارد نمایید
-              </h2>
-              <Input
-                Name="phone_number"
-                sizing="md"
-                type="text"
-                ClassName="w-full"
-                placeholder="شماره همراه"
-                autofocus
-                onChange={(e) => {
-                  dispatchLogin({
-                    type: "setPhoneNumber",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                  dispatchLogin({
-                    type: "setsmsStatesOTP",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                  dispatchLogin({
-                    type: "setsmsStates",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                }}
-              />
-              <SubmitButton
-                loading={loading}
-                isValid={isValid}
-                buttonText={"ادامه"}
-                showCross={showCross}
-                buttonBgColor={background}
-                onClick={handlepostPhoneNumber}
-                // onKeyUp={handleKeyDown}
-              />
-            </div>
-          ) : (
-            <div className="px-6 md:px-10 mt-5 h-auto">
-              <div className="flex p-3">
-                <LuUser2 color="#8754AF" size={26} />
-                <span className="text-[#8754AF] text-xl font-semibold mr-2">
-                  ورود یا ثبت‌نام
-                </span>
-              </div>
-              <h2 className="text-base font-light text-[#717171] p-2">
-                کد پیامک شده را وارد نمایید
-              </h2>
-              <form className="flex items-center flex-row-reverse justify-between mb-4 w-full">
-                <MaterialInput
-                  maxLength={1}
-                  dir="ltr"
-                  name="code1"
-                  size="md"
-                  autoFocus
-                  className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
-                  labelProps={{
-                    className: "hidden",
-                  }}
-                  containerProps={{
-                    className: "inline-flex w-auto min-w-[40px] !w-[40px]",
-                  }}
-                  crossOrigin={undefined}
-                  onKeyUp={handleInputFocus}
-                  ref={firstInputRef}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onChange={(e) => handleChange(e)}
-                />
-                <MaterialInput
-                  maxLength={1}
-                  dir="ltr"
-                  size="md"
-                  name="code2"
-                  className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
-                  labelProps={{
-                    className: "hidden",
-                  }}
-                  containerProps={{
-                    className: "inline-flex w-auto min-w-[40px] !w-[40px]",
-                  }}
-                  crossOrigin={undefined}
-                  onKeyUp={handleInputFocus}
-                  ref={secondInputRef}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onChange={(e) => handleChange(e)}
-                />
-                <MaterialInput
-                  maxLength={1}
-                  dir="ltr"
-                  size="md"
-                  name="code3"
-                  className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
-                  labelProps={{
-                    className: "hidden",
-                  }}
-                  containerProps={{
-                    className: "inline-flex w-auto min-w-[40px] !w-[40px]",
-                  }}
-                  crossOrigin={undefined}
-                  onKeyUp={handleInputFocus}
-                  ref={thirdInputRef}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onChange={(e) => handleChange(e)}
-                />
-                <MaterialInput
-                  maxLength={1}
-                  dir="ltr"
-                  name="code4"
-                  size="md"
-                  className="text-center !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
-                  labelProps={{
-                    className: "hidden",
-                  }}
-                  containerProps={{
-                    className: "inline-flex w-auto min-w-[40px] !w-[40px]",
-                  }}
-                  crossOrigin={undefined}
-                  onKeyUp={handleInputFocus}
-                  ref={fourthInputRef}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onChange={(e) => handleChange(e)}
-                />
-                <MaterialInput
-                  maxLength={1}
-                  dir="ltr"
-                  name="code5"
-                  size="md"
-                  className="text-center -ml-10 !w-10 !border-[#C8C8C8] outline-none shadow-none bg-white border-2 text-[#C8C8C8]  placeholder:text-[#C8C8C8] focus:text-[#7F38B7] hover:!border-[#8754AF] hover:!border-t-[#8754AF] focus:!border-[#7F38B7] focus:!border-t-[#7F38B7] focus:ring-[#8754AF]/10"
-                  labelProps={{
-                    className: "hidden",
-                  }}
-                  containerProps={{
-                    className: "inline-flex w-auto min-w-[40px] !w-[40px]",
-                  }}
-                  crossOrigin={undefined}
-                  onKeyUp={handleInputFocus}
-                  ref={fifthInputRef}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                  onChange={(e) => {
-                    handleChange(e);
-                    dispatchLogin({
-                      type: "setOtp",
-                    });
-                  }}
-                />
-              </form>
-              <Input
-                Name="customer_code"
-                sizing="md"
-                type="text"
-                ClassName="w-full"
-                placeholder="کد معرف"
-                onChange={(e) => {
-                  dispatchLogin({
-                    type: "setsmsStates",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                }}
-              />
-              {error ? (
-                <div className="text-red-500 text-sm p-1">
-                  {"لطفا کد پیامکی را کامل وارد کنید"}
-                </div>
-              ) : null}
-              <SubmitButton
-                loading={loadingSms}
-                isValid={isValid}
-                buttonText={"ورود"}
-                showCross={showCross}
-                buttonBgColor={background}
-                onClick={handlePostOtpValid}
-                // onKeyUp={handleKeyDown}
-              />
-            </div>
-          )}
-
-          <Button
-            className="bg-[#ECECEC] w-full mt-3 rounded-t-none absolute right-0 bottom-0 py-3 !absolute bottom-0 right-0 text-[#717171] text-base font-light"
-            onClick={() => {
-              isSendSms === false ? showModalLogin() : setisSendSms(false);
-            }}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            بازگشت {">"}
-          </Button>
-        </DialogBody>
-      </Dialog>
+          بازگشت {">"}
+        </Button>
+      </DialogBody>
+    </Dialog>
     </section>
   );
 };

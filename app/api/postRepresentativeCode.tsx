@@ -1,7 +1,7 @@
 import axios, { AxiosError, CancelTokenSource } from "axios";
 import axiosInstance from "./apiConfig";
 
-export const postRepresentativeCode = async(
+const postRepresentativeCode = async(
   RepresentativeCode: RepresentativeCode
 ) => {
   let cancelTokenSource: CancelTokenSource | null = null;
@@ -35,6 +35,8 @@ export const postRepresentativeCode = async(
     }
   }
 };
+
+export default postRepresentativeCode;
 
 // type
 export interface RepresentativeCode {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom/dist";
 
 const LineSpace: React.FC<LineSpaceProps> = ({
   text,
@@ -11,7 +11,7 @@ const LineSpace: React.FC<LineSpaceProps> = ({
 }) => {
   return (
     <div
-      className={`w-full flex items-center justify-center px-6 lg:px-3 xl:px-4 mt-10 ${ClassName}`}
+      className={`w-full flex items-center justify-center mt-10 ${ClassName}`}
       style={{ color: color }}
     >
       {icon}

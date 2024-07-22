@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumbs from "@material-tailwind/react/components/Breadcrumbs";
 import home from "../assets/svg/home.svg";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom/dist";
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const BreadcrumbsWithIcon: React.FC<BreadcrumbsWithIconProps> = ({

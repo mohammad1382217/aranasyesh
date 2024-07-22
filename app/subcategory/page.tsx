@@ -1,10 +1,12 @@
-import React, { lazy, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CardComponent from "../components/Card";
 import axiosInstance from "../api/apiConfig";
 const LineSpace = lazy(() => import("../components/lineSpace"));
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
-const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
+const BreadcrumbsWithIcon = React.lazy(
+  () => import("../components/BreadcrumbsWithIcon")
+);
 
 const SubCategory: React.FC = () => {
   const [category, setCategory] = useState<Category>({
@@ -66,22 +68,24 @@ const SubCategory: React.FC = () => {
               ]}
             />
           </div>
-          <LineSpace
-            ClassName={"!justify-start -mr-2"}
-            color={`#4A4A4A`}
-            text={sub_categories_name!}
-            icon={
-              <LazyImage
-                className="!w-7 !h-7 my-10"
-                src={category.category_detail.icon}
-                alt={sub_categories_name!}
-                width={28}
-                height={28}
-              />
-            }
-            showMore={false}
-            link={""}
-          />
+          <Suspense fallback={<div>loading...</div>}>
+            <LineSpace
+              ClassName={"!justify-start -mr-2"}
+              color={`#4A4A4A`}
+              text={sub_categories_name!}
+              icon={
+                <LazyImage
+                  className="!w-7 !h-7 my-10"
+                  src={category.category_detail.icon}
+                  alt={sub_categories_name!}
+                  width={28}
+                  height={28}
+                />
+              }
+              showMore={false}
+              link={""}
+            />
+          </Suspense>
         </div>
         {category.companies.length > 0 ? (
           <>

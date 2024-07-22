@@ -28,49 +28,11 @@ export interface ProfileData {
   discounts: discount[];
 }
 
-export interface AccountData {
-  previous: null;
-  page: number;
-  next: null;
-  results: {
-    id: number;
-    full_name: string;
-    phone_number: string;
-    email: string;
-    subscription: {
-      is_buy: boolean;
-      remain: string;
-      name: string;
-    };
-    permission: {
-      is_staff: boolean;
-      is_owner: boolean;
-      company_url: string;
-      company_id: string;
-    };
-  }[];
-}
-
 export interface UserState {
-  profile: ProfileData | null;
   editProfile: ProfileData | null;
 }
 
 export const initialUser: UserState = {
-  profile: {
-    first_name: null,
-    last_name: null,
-    birth_date: null,
-    email: null,
-    province: null,
-    city: null,
-    address: null,
-    phone_number: "",
-    qr_code: "",
-    representative_code: "",
-    customer_code: 0,
-    discounts: [],
-  },
   editProfile: {
     first_name: null,
     last_name: null,
@@ -100,20 +62,6 @@ export const userReducer = (
   switch (action.type) {
     case RESET_USER:
       return {
-        profile: {
-          first_name: null,
-          last_name: null,
-          birth_date: null,
-          email: null,
-          province: null,
-          city: null,
-          address: null,
-          phone_number: "",
-          qr_code: "",
-          representative_code: "",
-          customer_code: 0,
-          discounts: [],
-        },
         editProfile: {
           first_name: null,
           last_name: null,
@@ -132,7 +80,6 @@ export const userReducer = (
     case FETCH_PROFILE_SUCCESS:
       return {
         ...state,
-        profile: action.payload,
         editProfile: action.payload,
       };
     case SET_EDIT_PROFILE:

@@ -1,5 +1,4 @@
-import React, { lazy, useEffect, useReducer, useState } from "react";
-const LineSpace = lazy(() => import("../components/lineSpace"));
+import React, { lazy, Suspense, useEffect, useReducer, useState } from "react";
 import eitaa from "../assets/svg/eitaa.svg";
 import telegram from "../assets/svg/telegram.svg";
 import Chip from "@material-tailwind/react/components/Chip";
@@ -12,17 +11,18 @@ import {
 import axiosInstance, { getCookie } from "../api/apiConfig";
 import defaultImage from "../assets/images/default-placeholder.webp";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.scss";
+import "slick-carousel/slick/slick-theme.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import StarRating from "../components/Star";
-import { fetchSpecial } from "../api/fetchSpecial";
+import fetchSpecial from "../api/fetchSpecial";
 import SubmitButton from "../components/submitButton";
 import Loading from "../components/loading";
 import Video from "../components/video";
 
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
+const LineSpace = lazy(() => import("../components/lineSpace"));
 const CardComponent = React.lazy(() => import("../components/Card"));
 const TextArea = React.lazy(() => import("../components/TextArea"));
 const BreadcrumbsWithIcon = React.lazy(
@@ -191,7 +191,7 @@ const Services = () => {
         <>
           {" "}
           <section className="bg-[#F5F5F5] w-full flex flex-col justify-center py-8">
-            <div className="container mx-auto px-4 lg:px-8">
+            <div className="container mx-auto px-6 lg:px-8">
               <div className="w-full flex items-center justify-center sm:justify-start rounded-2xl">
                 <BreadcrumbsWithIcon
                   Address={[
@@ -214,7 +214,7 @@ const Services = () => {
             </div>
           </section>
           <section className="bg-[#F5F5F5] w-full flex flex-col justify-center py-8 ">
-            <div className="flex flex-col lg:flex-row items-start container mx-auto px-4 lg:px-8 gap-8 ">
+            <div className="flex flex-col lg:flex-row items-start container mx-auto px-6 lg:px-8 gap-8 ">
               <section className="bg-white flex xs:p-4 p-8 rounded-2xl lg:w-8/12 w-full flex-col items-center gap-5 h-full">
                 <div className="container flex flex-row justify-center items-center lg:px-3">
                   <div className="w-full flex flex-col xl:flex-row xl:justify-between items-center gap-3">
@@ -299,7 +299,7 @@ const Services = () => {
                         ) : (
                           <>
                             <LazyImage
-                              src={`https://api.aranasayesh.ir${mainImage}`}
+                              src={`https://api.aranasayesh.ir/${mainImage}`}
                               className="bg-cover rounded-xl h-[176px] lg:h-[352px] md:h-[24rem] xl:h-[22rem]"
                               alt="Main"
                               width={548}
@@ -319,7 +319,7 @@ const Services = () => {
                               />
                             ) : (
                               <img
-                                src={`https://api.aranasayesh.ir${images[2]}`}
+                                src={`https://api.aranasayesh.ir/${images[2]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[2])}
@@ -335,7 +335,7 @@ const Services = () => {
                               />
                             ) : (
                               <img
-                                src={`https://api.aranasayesh.ir${images[1]}`}
+                                src={`https://api.aranasayesh.ir/${images[1]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[1])}
@@ -351,7 +351,7 @@ const Services = () => {
                               />
                             ) : (
                               <img
-                                src={`https://api.aranasayesh.ir${images[0]}`}
+                                src={`https://api.aranasayesh.ir/${images[0]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[0])}
@@ -367,7 +367,7 @@ const Services = () => {
                               />
                             ) : (
                               <img
-                                src={`https://api.aranasayesh.ir${images[4]}`}
+                                src={`https://api.aranasayesh.ir/${images[4]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[4])}
@@ -383,7 +383,7 @@ const Services = () => {
                               />
                             ) : (
                               <img
-                                src={`https://api.aranasayesh.ir${images[3]}`}
+                                src={`https://api.aranasayesh.ir/${images[3]}`}
                                 className="bg-cover object-fill rounded-xl w-full px-1 md:px-0 sm:my-2 md:my-1 md:!w-full h-[5.3rem] xl:h-[4.6rem] 2xl:h-[4.6rem] 2xl:my-[0.5] xl:mt-2"
                                 alt={`Thumbnail`}
                                 onClick={() => setMainImage(images[3])}
@@ -395,19 +395,20 @@ const Services = () => {
                     </div>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <h3 className="flex text-[#7F38B7] text-2xl font-semibold gap-2">
+                    <h2 className="flex text-[#7F38B7] text-2xl font-semibold gap-2">
                       درباره{" "}
                       <div
                         dangerouslySetInnerHTML={{
                           __html: company.company_name,
                         }}
                       />
-                    </h3>
+                    </h2>
                     <p
+                      role="text"
                       lang="fa"
                       className="text-base font-light text-[#303030] text-justify"
                     >
-                      <div
+                      <span
                         dangerouslySetInnerHTML={{
                           __html: company.description,
                         }}
@@ -415,18 +416,18 @@ const Services = () => {
                     </p>
                   </div>
                   {company.video !== null ? (
-                    <div className="flex h-80">
+                    <div className="flex h-80 rounded-xl w-full items-center justify-center">
                       <Video
-                        src={`https://api.aranasayesh.ir${company.video}`}
-                        className="bg-cover rounded-xl w-full"
+                        src={`https://api.aranasayesh.ir/${company.video}`}
+                        className="rounded-xl bg-cover"
                         alt={"Services"}
                       />
                     </div>
                   ) : null}
                   <div className="w-full flex justify-between">
-                    <h3 className="text-[#7F38B7] self-center md:self-start text-xl sm:text-2xl font-semibold">
+                    <h2 className="text-[#7F38B7] self-center md:self-start text-xl sm:text-2xl font-semibold">
                       اطلاعات تماس این مجموعه
-                    </h3>
+                    </h2>
                     <div className="lg:flex gap-4 text-[#7F38B7] justify-center hidden">
                       {company.telegram !== null ? (
                         <LazyImage
@@ -542,9 +543,9 @@ const Services = () => {
                     </div>
                   </div>
                   <div className="w-full flex flex-col justify-between mt-4 gap-5">
-                    <h3 className="text-[#7F38B7] text-2xl font-semibold">
+                    <h2 className="text-[#7F38B7] text-2xl font-semibold">
                       ثبت نظر درباره این مجموعه
-                    </h3>
+                    </h2>
                     <TextArea
                       Name="description"
                       Value={description.description}
@@ -611,21 +612,23 @@ const Services = () => {
               </section>
               <section className="w-full lg:w-4/12 bg-white flex items-center self-start justify-center xs:p-4 p-8 rounded-2xl">
                 <div className="flex flex-wrap mx-auto flex-row lg:flex-col justify-center  gap-4 w-full  ">
-                  <LineSpace
-                    color={`#8754AF`}
-                    text={"پیشنهادهای ویژه"}
-                    icon={
-                      <LazyImage
-                        className="!w-7 !h-7"
-                        src={presentage}
-                        alt={""}
-                        width={28}
-                        height={28}
-                      />
-                    }
-                    showMore={false}
-                    link={""}
-                  />
+                  <Suspense fallback={<div>loading...</div>}>
+                    <LineSpace
+                      color={`#8754AF`}
+                      text={"پیشنهادهای ویژه"}
+                      icon={
+                        <LazyImage
+                          className="!w-7 !h-7"
+                          src={presentage}
+                          alt={""}
+                          width={28}
+                          height={28}
+                        />
+                      }
+                      showMore={false}
+                      link={""}
+                    />
+                  </Suspense>
                   <div className="flex flex-wrap lg:flex-nowrap mx-auto lg:mx-0 flex-row lg:flex-col justify-center columns-2 items-center w-full gap-6 mt-3">
                     {Banners.special.map((item, index) => (
                       <CardComponent

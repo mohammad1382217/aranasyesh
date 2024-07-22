@@ -3,7 +3,7 @@ import axiosInstance from "./apiConfig";
 import { Dispatch } from "react";
 import { Action } from "./Slices/SelectDateSlice/SelectDate";
 
-export const fetchDiscountHistory = (
+const fetchDiscountHistory = (
   dispatch: Dispatch<Action>
 ): (() => void) => {
   let cancelTokenSource: CancelTokenSource | null = null;
@@ -49,6 +49,8 @@ export const fetchDiscountHistory = (
     }
   };
 };
+
+export default fetchDiscountHistory;
 
 //type
 export interface Specific_date {

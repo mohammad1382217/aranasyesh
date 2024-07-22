@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import gift from "../assets/svg/gift.svg";
 import search from "../assets/svg/search.svg";
-import { LuUser2 } from "react-icons/lu";
 import axiosInstance, { getCookie, setCookie } from "../api/apiConfig";
 import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,15 +15,15 @@ import { HomeReducer, initialHome } from "../api/Slices/HomeSlice/Home";
 import { LoginReducer, initialLogin } from "../api/Slices/LoginSlice/Login";
 import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError, CancelTokenSource } from "axios";
-import { HiDownload, HiMenu } from "react-icons/hi";
 import logo from "../assets/svg/logo-orginal.svg";
-import {
-  UserContext,
-  UserContextType,
-} from "../api/Slices/UserSlice/userProvider";
 import { ThemeProvider } from "@material-tailwind/react/context/theme";
 import Context, { ContextType } from "../api/context";
+import { AccountData, useAuth } from "../api/authContext";
+import UserService from "../api/fetchAccount";
 
+const HiDownload = React.lazy(() => import("../components/icons/Hidownload"));
+const HiMenu = React.lazy(() => import("../components/icons/HiMenu"));
+const LuUser2 = React.lazy(() => import("../components/icons/LuUser2"));
 const AccordionCustomIcon = lazy(() => import("./AccordionWithIcon"));
 const MaterialInput = lazy(
   () => import("@material-tailwind/react/components/Input")
@@ -45,10 +44,8 @@ const LazyImage = lazy(() => import("./LazyImage"));
 
 const Header = () => {
   const navigate = useNavigate();
-  const User = useContext(UserContext);
-  const { account, setAccount, isLoggedIn, setIsLoggedIn } =
-    User as UserContextType;
   const context = useContext(Context);
+  const { isLoggedIn, isAdmin, dispatch } = useAuth();
   const { categoryData } = context as ContextType;
   const [showCross, setShowCross] = useState(false);
   const [background, setBackground] = useState("#8754AF");
@@ -56,37 +53,6 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [loadingSms, setLoadingSms] = useState(false);
-
-  useEffect(() => {
-    if (getCookie("accessToken")) {
-      let cancelTokenSource: CancelTokenSource | null = null;
-
-      try {
-        cancelTokenSource = axios.CancelToken.source();
-      } catch (error) {
-        // Handle error if cancel token creation fails
-        console.error("Failed to create cancel token:", error);
-      }
-
-      const fetchData = async () => {
-        if (!cancelTokenSource) return; // Exit if cancel token is null
-        try {
-          const response = await axiosInstance.get("account/", {
-            cancelToken: cancelTokenSource.token,
-          });
-          const data = response.data;
-          setIsLoggedIn(true);
-          setAccount(data);
-        } catch (error) {
-          if (axios.isCancel(error as AxiosError)) {
-            console.log("Request canceled by cleanup");
-          }
-        }
-      };
-
-      fetchData();
-    }
-  }, [getCookie("accessToken")]);
 
   const handlepostPhoneNumber = async () => {
     setLoading(true);
@@ -96,13 +62,7 @@ const Header = () => {
     // const phoneNumber = Number(LoginState.PhoneNumber.phone_number);
     if (regex1.test(LoginState.PhoneNumber.phone_number)) {
       try {
-        await axiosInstance.post(
-          "account/",
-          LoginState.PhoneNumber
-        );
-        // setTimeout(() => {
-
-        // }, 2000);
+        await axiosInstance.post("account/", LoginState.PhoneNumber);
         setLoading(false);
         setButtonText("کد ارسال شد");
         setIsValid(true);
@@ -239,8 +199,7 @@ const Header = () => {
           }
         );
         const data = response.data;
-        console.log(data.token)
-        setCookie("accessToken", data.token,7,true);
+        setCookie("accessToken", data.token, 7, true);
         setLoading(false);
         setIsValid(true);
         setButtonText("ادامه");
@@ -264,7 +223,6 @@ const Header = () => {
           setIsValid(false);
           setShowCross(false);
           setButtonText("ورود");
-
           setBackground("#8754AF");
         }, 2000);
         if (axios.isCancel(error as AxiosError)) {
@@ -273,6 +231,7 @@ const Header = () => {
         return false;
       } finally {
         setLoadingSms(false);
+        setisSendSms(false);
       }
     };
 
@@ -284,7 +243,7 @@ const Header = () => {
       isLoggedIn = await loginUser(LoginState.smsStates);
     }
 
-    setIsLoggedIn(isLoggedIn);
+    dispatch({ type: "SET_LOGGED_IN", payload: isLoggedIn });
 
     if (isLoggedIn) {
       showModalLogin();
@@ -331,7 +290,7 @@ const Header = () => {
       handlepostPhoneNumber();
     }
   };
-  
+
   const handelSearch = () => {
     navigate(`search?q=${SearchInput}`);
     setModalSearch(false);
@@ -361,10 +320,10 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="shadow-md border-b-1 shadow-[#00000040]">
+    <header className="shadow-md border-b-1 shadow-[#00000040] h-[104px] 2xl:h-[164px]">
       <section className="w-full flex items-center justify-center py-6 lg:py-4 sm:border-b-1">
-        <div className="container mx-auto px-4 lg:px-8">
-          <nav className="w-full flex  justify-between px-0 py-4 gap-2 ">
+        <div className="container mx-auto px-6 lg:px-8">
+          <nav className="w-full flex justify-between gap-2">
             <div className="inline-flex items-center 2xl:hidden">
               <ThemeProvider value={theme}>
                 <IconButton
@@ -381,7 +340,7 @@ const Header = () => {
                   placement="right"
                   open={openDrawerRight}
                   onClose={() => setOpenDrawerRightHandler()}
-                  className={`fixed top-0 bottom-0 right-0 w-60 overflow-auto`}
+                  className={`fixed top-0 bottom-0 right-0 w-60`}
                   placeholder={undefined}
                   onPointerEnterCapture={undefined}
                   onPointerLeaveCapture={undefined}
@@ -402,7 +361,7 @@ const Header = () => {
                       </Button>
                     )}
                     {isLoggedIn ? (
-                      account?.results[0]?.permission?.is_owner ? (
+                      isAdmin ? (
                         <>
                           <Button
                             className="py-2 rounded-lg border-[3px] border-solid border-[#8754AF] text-lg font-semibold text-[#8754AF] hover:!bg-white bg-white"
@@ -451,12 +410,11 @@ const Header = () => {
                       onClick={() => setOpenDrawerRight(false)}
                     >
                       <div className="flex items-center justify-center gap-2">
-                        <span className="text-lg font-semibold text-[#8754AF]">
+                        <span className="text-xl font-semibold text-[#8754AF]">
                           خرید کارت تخفیف
                         </span>
                         <LazyImage
                           className="!aspect-square !w-6 !h-6"
-                          loading="eager"
                           src={gift}
                           alt={"هدیه"}
                           width={25}
@@ -496,19 +454,12 @@ const Header = () => {
             </div>
             <Link className="block" to={"/"}>
               <div className="flex items-center justify-center gap-2 xl:gap-4">
-                <div className="flex self-center ">
-                  <LazyImage
-                    loading="eager"
-                    src={logo}
-                    className="xl:w-[79px] xl:h-[102px] !w-[43px] !h-[56px]"
-                    alt={"logo"}
-                    width={79}
-                    height={102}
-                  />
+                <div className="flex self-center xl:w-[79px] xl:h-[102px] !w-[43px] !h-[56px]">
+                  <LazyImage src={logo} alt={"logo"} width={79} height={102} />
                 </div>
-                <span className="text-lg sm:text-2xl xl:text-3xl xs:text-base font-semibold text-[#8754AF]">
+                <h1 className="text-lg sm:text-2xl xl:text-3xl xs:text-base font-semibold text-[#8754AF]">
                   آران آسایش آفرینان
-                </span>
+                </h1>
               </div>
             </Link>
             <div className="flex 2xl:hidden items-center">
@@ -522,7 +473,6 @@ const Header = () => {
               >
                 <LazyImage
                   className="!w-[27px] !h-[26px]"
-                  loading="eager"
                   src={search}
                   alt={"search"}
                   width={27}
@@ -538,7 +488,7 @@ const Header = () => {
                 className="!w-auto !max-w-[90%] sm:!min-w-96"
               >
                 <DialogBody
-                  className="h-auto !w-auto !m-0 !p-0"
+                  className="!h-auto !w-auto !m-0 !p-0"
                   placeholder={undefined}
                   onPointerEnterCapture={undefined}
                   onPointerLeaveCapture={undefined}
@@ -590,12 +540,11 @@ const Header = () => {
             <div className="hidden 2xl:flex 2xl:items-center 2xl:justify-center gap-4">
               <Link className="cursor-pointer" to={"/BuySubscription"}>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-lg font-semibold text-[#8754AF]">
+                  <span className="text-xl font-semibold text-[#8754AF]">
                     خرید کارت تخفیف
                   </span>
                   <LazyImage
                     className="!aspect-square !w-6 !h-6"
-                    loading="eager"
                     src={gift}
                     alt={"هدیه"}
                     width={25}
@@ -617,7 +566,7 @@ const Header = () => {
                 </>
               )}
               {isLoggedIn ? (
-                account?.results[0]?.permission?.is_owner ? (
+                isAdmin ? (
                   <>
                     <Button
                       className="py-2 rounded-lg border-[3px] border-solid border-[#8754AF] text-lg font-semibold text-[#8754AF] hover:!bg-white bg-white"
@@ -678,7 +627,7 @@ const Header = () => {
           isSticky ? "stick" : ""
         }`}
       >
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="container mx-auto px-6 lg:px-8">
           <div className="w-full flex items-center justify-between">
             <DropdownCategory />
             <div className="w-auto">
@@ -692,7 +641,6 @@ const Header = () => {
                   }}
                 >
                   <LazyImage
-                    loading="eager"
                     className="!aspect-square relative !w-[27px] !h-[26px]"
                     src={search}
                     alt={"search"}
@@ -734,7 +682,6 @@ const Header = () => {
           <div className="flex items-center justify-center w-full p-2 py-4">
             <LazyImage
               className="!w-20 !h-[102px]"
-              loading="eager"
               src={logo}
               alt={"logo"}
               width={79}
@@ -745,55 +692,7 @@ const Header = () => {
             </h1>
           </div>
           <div className="flex-1 border-[#ECECEC] border-t-2"></div>
-          {isSendSms === false ? (
-            <div className="px-2 mt-5">
-              <div className="flex p-3">
-                <LuUser2 color="#8754AF" size={26} />
-                <span className="text-[#8754AF] text-xl font-semibold mr-2">
-                  ورود یا ثبت‌نام
-                </span>
-              </div>
-              <h2 className="text-base font-light text-[#717171] py-2">
-                لطفاً شماره همراه خود را وارد نمایید
-              </h2>
-              <Input
-                Name="phone_number"
-                sizing="md"
-                type="text"
-                ClassName="w-full"
-                placeholder="شماره همراه"
-                autofocus
-                onChange={(e) => {
-                  dispatchLogin({
-                    type: "setPhoneNumber",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                  dispatchLogin({
-                    type: "setsmsStatesOTP",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                  dispatchLogin({
-                    type: "setsmsStates",
-                    payload: { key: e.target.name, value: e.target.value },
-                  });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handlepostPhoneNumber(); // تابعی که می‌خواهید اجرا شود را فراخوانی کنید
-                  }
-                }}
-              />
-              <SubmitButton
-                loading={loading}
-                isValid={isValid}
-                buttonText={buttonText}
-                showCross={showCross}
-                buttonBgColor={background}
-                onClick={handlepostPhoneNumber}
-                onKeyUp={handleKeyDown}
-              />
-            </div>
-          ) : (
+          {isSendSms ? (
             <div className="px-2 mt-5 h-auto">
               <div className="flex p-3">
                 <LuUser2 color="#8754AF" size={26} />
@@ -946,6 +845,54 @@ const Header = () => {
                 buttonBgColor={background}
                 onClick={handlePostOtpValid}
                 // onKeyUp={handleKeyDown}
+              />
+            </div>
+          ) : (
+            <div className="px-2 mt-5">
+              <div className="flex p-3">
+                <LuUser2 color="#8754AF" size={26} />
+                <span className="text-[#8754AF] text-xl font-semibold mr-2">
+                  ورود یا ثبت‌نام
+                </span>
+              </div>
+              <h2 className="text-base font-light text-[#717171] py-2">
+                لطفاً شماره همراه خود را وارد نمایید
+              </h2>
+              <Input
+                Name="phone_number"
+                sizing="md"
+                type="text"
+                ClassName="w-full"
+                placeholder="شماره همراه"
+                autofocus
+                onChange={(e) => {
+                  dispatchLogin({
+                    type: "setPhoneNumber",
+                    payload: { key: e.target.name, value: e.target.value },
+                  });
+                  dispatchLogin({
+                    type: "setsmsStatesOTP",
+                    payload: { key: e.target.name, value: e.target.value },
+                  });
+                  dispatchLogin({
+                    type: "setsmsStates",
+                    payload: { key: e.target.name, value: e.target.value },
+                  });
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handlepostPhoneNumber(); // تابعی که می‌خواهید اجرا شود را فراخوانی کنید
+                  }
+                }}
+              />
+              <SubmitButton
+                loading={loading}
+                isValid={isValid}
+                buttonText={buttonText}
+                showCross={showCross}
+                buttonBgColor={background}
+                onClick={handlepostPhoneNumber}
+                onKeyUp={handleKeyDown}
               />
             </div>
           )}

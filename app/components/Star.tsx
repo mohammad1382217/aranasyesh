@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+const FaStar = React.lazy(() => import("../components/icons/FaStar"));
+
 const StarRating = ({
   defaultValue,
   onChange,

@@ -12,7 +12,7 @@ const OurGoals = () => {
           <h1 className="text-[#7F38B7] self-center md:self-start text-3xl sm:text-4xl font-semibold">
             اهداف آران آسایش
           </h1>
-          <p lang="fa" className="text-base font-light text-[#303030] text-justify">
+          <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify">
             متخصصان مجموعه آران آسایش آفرینان با مطالعه روی معضل رکود و با هدف
             خروج از آن دور هم گرد آمده و با جمع‌آوری نتایج خود و تحقیقات میدانی،
             به راهکار این معضل دست پیدا کردند. یکی از نتایج جمع شدن متخصصان

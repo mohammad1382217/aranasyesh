@@ -3,7 +3,7 @@ import axiosInstance from "./apiConfig";
 import { Dispatch } from "react";
 import { Action } from "./Slices/SelectDateSlice/SelectDate";
 
-export const fetchSpecific_date = (
+const fetchSpecific_date = (
   dispatch: Dispatch<Action>,
   date: string
 ): (() => void) => {
@@ -76,6 +76,8 @@ export const fetchSpecific_date = (
     }
   };
 };
+
+export default fetchSpecific_date;
 
 //type
 

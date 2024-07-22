@@ -1,8 +1,5 @@
 import React from "react";
-import { type CustomFlowbiteTheme } from "flowbite-react";
-const Textarea = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Textarea }))
-);
+import { type CustomFlowbiteTheme, Textarea } from "flowbite-react";
 
 const TextArea: React.FC<TextareaProps> = ({
   TextAreaClass,

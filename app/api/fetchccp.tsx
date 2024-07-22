@@ -2,7 +2,7 @@ import axios, { AxiosError, CancelTokenSource } from "axios";
 import axiosInstance from "./apiConfig";
 import { Dispatch } from "react";
 
-export const fetchCCP = (dispatch: Dispatch<Action>): (() => void) => {
+const fetchCCP = (dispatch: Dispatch<Action>): (() => void) => {
   let cancelTokenSource: CancelTokenSource | null = null;
 
   try {
@@ -41,6 +41,8 @@ export const fetchCCP = (dispatch: Dispatch<Action>): (() => void) => {
     }
   };
 };
+
+export default fetchCCP;
 
 export interface Action {
   type: string;

@@ -5,34 +5,15 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import persian_en from "react-date-object/locales/persian_en";
 import noteText from "../../assets/svg/note-text.svg";
 import { Suspense, useReducer, useState } from "react";
-import { fetchSpecific_date } from "../../api/fetchSpecific_date";
+import fetchSpecific_date from "../../api/fetchSpecific_date";
 import {
   initialtransactionData,
   transactionDataReducer,
 } from "../../api/Slices/SelectDateSlice/SelectDate";
 import React from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 
-const Button = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Button }))
-);
-const Table = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Table }))
-);
-const TableBody = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.TableBody }))
-);
-const TableCell = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.TableCell }))
-);
-const TableHead = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.TableHead }))
-);
-const TableHeadCell = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.TableHeadCell }))
-);
-const TableRow = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.TableRow }))
-);
+const Button = React.lazy(() => import("../../components/flowbite-react/button"));
 const LazyImage = React.lazy(() => import("../../components/LazyImage"));
 
 const theme = {
@@ -49,7 +30,7 @@ const theme = {
     },
   },
   head: {
-    base: "group/head text-xs uppercase text-gray-700 dark:text-gray-400",
+    base: "group/head !text-sm uppercase text-gray-700 dark:text-gray-400",
     cell: {
       base: "bg-gray-50 px-6 py-3",
     },

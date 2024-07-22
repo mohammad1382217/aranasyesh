@@ -39,7 +39,7 @@ const AboutUs = () => {
               />
             </section>
           </div>
-          <p lang="fa" className="text-base font-light text-[#303030] text-justify">
+          <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify">
             مجوعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید دانشگاه و
             صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا مرادی مشغول
             فعالیت است. این مجموعه با راه‌اندازی شبکه سراسری تخفیف ایران با

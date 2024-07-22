@@ -2,11 +2,8 @@ import React from "react";
 import {
   type CustomFlowbiteTheme,
   type FlowbiteTextInputSizes,
+  TextInput
 } from "flowbite-react";
-
-const TextInput = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.TextInput }))
-);
 
 const Input: React.FC<InputProps> = ({
   type,

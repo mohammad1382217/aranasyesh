@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useReducer } from "react";
 import { DiscountHistoryReducer, initialDiscountHistory } from "../../api/Slices/DiscountHistorySlice/DiscountHistory";
-import { fetchDiscountHistory } from "../../api/fetchDiscountHistory";
+import fetchDiscountHistory from "../../api/fetchDiscountHistory";
 
 const MyAreaChart = React.lazy(() => import("../../components/LineChart"));
 

@@ -5,7 +5,7 @@ import {
   CardBlog,
   initialBlog,
 } from "../api/Slices/BlogSlice/blog";
-import { fetchBlogs } from "../api/fetchBlogs";
+import fetchBlogs from "../api/fetchBlogs";
 
 interface Props {
   itemsPerPage: number;

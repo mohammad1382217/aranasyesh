@@ -1,13 +1,17 @@
-
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom/dist";
 import bazar from "../assets/svg/bazar.svg";
-import { HiDownload } from "react-icons/hi";
 import eitaa from "../assets/svg/eitaa.svg";
 import logo from "../assets/svg/logo-orginal.svg";
-import Button from "@material-tailwind/react/components/Button";
-import Typography from "@material-tailwind/react/components/Typography";
 import qr_code from "../assets/images/aranasaysh-app-download.webp";
+
+const Typography = React.lazy(
+  () => import("@material-tailwind/react/components/Typography")
+);
+const Button = React.lazy(
+  () => import("@material-tailwind/react/components/Button")
+);
+const HiDownload = React.lazy(() => import("../components/icons/Hidownload"));
 const LazyImage = React.lazy(() => import("./LazyImage"));
 
 const FooterWithSocialLinks = () => {
@@ -54,7 +58,7 @@ const FooterWithSocialLinks = () => {
   return (
     <footer className="w-full">
       <section className="bg-[#ECECEC] w-full flex items-center justify-center py-6 lg:py-4">
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="container mx-auto px-6 lg:px-8">
           <div className="flex flex-col 2xl:flex-row justify-between gap-y-6 gap-x-20 py-8">
             <div className="w-full 2xl:max-w-80 flex flex-col items-center md:items-start justify-center gap-2">
               <div className="md:w-full flex items-center justify-center gap-2">
@@ -76,8 +80,14 @@ const FooterWithSocialLinks = () => {
                   آران آسایش آفرینان{" "}
                 </Typography>
               </div>
-              <p lang="fa" className="text-base font-light text-[#374151] text-justify">
-              مجموعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید دانشگاه و صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا مرادی مشغول فعالیت است.
+              <p
+                role="text"
+                lang="fa"
+                className="text-base font-light text-[#374151] text-justify"
+              >
+                مجموعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید
+                دانشگاه و صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا
+                مرادی مشغول فعالیت است.
               </p>
             </div>
             <div className="flex flex-col lg:flex-row justify-between items-center lg:w-full gap-y-8">
@@ -109,22 +119,17 @@ const FooterWithSocialLinks = () => {
               </div>
               <div className="flex items-center xs:justify-between">
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="block antialiased  mb-5 -mt-4 text-base xl:text-lg font-bold text-[#303030]">
+                  <h2 className="block antialiased  mb-5 -mt-4 text-base xl:text-lg font-bold text-[#303030]">
                     دریافت اپلیکیشن
-                  </h3>
+                  </h2>
                   <Link
                     to={"https://api.aranasayesh.ir/app/download/"}
-                    className=""
+                    className="flex items-center justify-center shadow-none !bg-transparent text-gray-700 hover:!bg-transparent sm:!px-4 gap-1"
                   >
-                    <button
-                      className="flex items-center justify-center shadow-none !bg-transparent text-gray-700 hover:!bg-transparent max-sm:!px-4"
-                      onClick={() => {}}
-                    >
-                      <HiDownload className="w-5 h-5 ml-1" color="#7F38B7" />
-                      <span className="block antialiased text-gray-700 xs:text-xs text-base font-normal transition-colors bg-transparent">
-                        دانلود مستقیم
-                      </span>
-                    </button>
+                    <HiDownload className="w-[19px] h-[19px]" color="#7F38B7" />
+                    <span className="block antialiased text-gray-700 text-sm lg:text-lg font-normal transition-colors bg-transparent w-max">
+                      دانلود مستقیم
+                    </span>
                   </Link>
                   <Button
                     disabled={true}
@@ -141,7 +146,7 @@ const FooterWithSocialLinks = () => {
                       height={32}
                       alt="bazar"
                     />
-                    <span className="block antialiased text-gray-700 xs:text-xs text-base font-normal transition-colors bg-transparent">
+                    <span className="block antialiased text-gray-700 xs:!text-sm text-base font-normal transition-colors bg-transparent">
                       دانلود از کافه بازار
                     </span>
                   </Button>
@@ -160,15 +165,15 @@ const FooterWithSocialLinks = () => {
         </div>
       </section>
       <section className="w-full bg-[#F4F4F4] flex items-center justify-center !py-6 lg:py-4">
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="container mx-auto px-6 lg:px-8">
           <div className="w-full flex flex-col justify-between items-center md:flex-row">
-            <h4 className="mb-5 text-center font-light text-[#4B5563] xl:mb-0">
+            <h2 className="mb-5 text-center font-light text-[#4B5563] xl:mb-0">
               کلیه حقوق این وبسایت متعلق به آران آسایش آفرینان است.
-            </h4>
+            </h2>
             <div className="flex gap-4 text-purple-500 sm:justify-center items-center">
               <span
                 onClick={() => openInNewTab("https://eitaa.com/aranasayesh")}
-                className="block antialiased py-1.5 xs:text-xs text-base font-normal hover:text-blue-gray-900 items-center lg:items-start opacity-80 transition-opacity hover:opacity-100 cursor-pointer"
+                className="block antialiased py-1.5 xs:!text-sm text-base font-normal hover:text-blue-gray-900 items-center lg:items-start opacity-80 transition-opacity hover:opacity-100 cursor-pointer"
               >
                 <LazyImage
                   loading="lazy"
@@ -185,7 +190,7 @@ const FooterWithSocialLinks = () => {
                     "https://www.instagram.com/aranasayesh.ir?igsh=bjh0MG92ZnBpaHNx"
                   )
                 }
-                className="block antialiased py-1.5 xs:text-xs text-base font-normal hover:text-blue-gray-900 items-center lg:items-start opacity-80 transition-opacity hover:opacity-100 cursor-pointer"
+                className="block antialiased py-1.5 xs:!text-sm text-base font-normal hover:text-blue-gray-900 items-center lg:items-start opacity-80 transition-opacity hover:opacity-100 cursor-pointer"
               >
                 <svg
                   className="h-7 w-7"

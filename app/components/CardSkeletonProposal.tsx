@@ -15,9 +15,9 @@ const CardSkeletonProposal: React.FC<CardComponentType> = ({ key }) => {
         <Skeleton height={150} width={340} className="w-full h-full" />
       </div>
       <div className="flex flex-col justify-center items-center px-2">
-        <h5 className="text-lg text-right w-full font-light tracking-tight text-[#303030] dark:text-white self-start">
+        <h2 className="text-lg text-right w-full font-light tracking-tight text-[#303030] dark:text-white self-start">
           <Skeleton count={2} />
-        </h5>
+        </h2>
       </div>
     </div>
   );

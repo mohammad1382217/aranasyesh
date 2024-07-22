@@ -1,10 +1,10 @@
 import React from "react";
 import bazar from "../assets/svg/bazar.svg";
-import { HiDownload } from "react-icons/hi";
 import Button from "@material-tailwind/react/components/Button";
 import App from "../assets/images/AppDownload.webp";
 import qr_code from "../assets/images/aranasaysh-app-download.webp";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom/dist";
+const HiDownload =  React.lazy(() => import("../components/icons/Hidownload"));
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
 
 const Application = () => {
@@ -24,7 +24,7 @@ const Application = () => {
                 <h2 className="text-xl font-semibold p-4">
                   با اپلیکیشن آران آسایش، ساده‌تر از همیشه تخفیف بگیر!
                 </h2>
-                <p lang="fa" className="flex items-center justify-center text-base font-light text-[#303030] text-justify lg:max-w-md ">
+                <p role="text" lang="fa" className="flex items-center justify-center text-base font-light text-[#303030] text-justify lg:max-w-md ">
                   لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
                   با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و
                   مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی

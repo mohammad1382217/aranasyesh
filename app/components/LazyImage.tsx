@@ -3,8 +3,8 @@ import React from "react";
 const Image: React.FC<Image> = ({
   src,
   alt,
-  className,
-  loading,
+  className = "",
+  loading = "lazy",
   width,
   height,
   onClick,
@@ -21,13 +21,19 @@ const Image: React.FC<Image> = ({
   };
 
   React.useEffect(() => {
-    const observer = new IntersectionObserver(callback);
+    const observer = new IntersectionObserver(callback, {
+      rootMargin: "50px",
+      threshold: 0.01,
+    });
 
     if (ref?.current) {
       observer.observe(ref.current);
     }
 
     return () => {
+      if (ref?.current) {
+        observer.unobserve(ref.current);
+      }
       observer.disconnect();
     };
   }, []);
@@ -36,34 +42,34 @@ const Image: React.FC<Image> = ({
     <picture>
       <source
         type="image/webp"
-        srcSet={`${src} 480w, ${src} 800w, ${src} 1200w`}
+        srcSet={`${src} 100vw`}
       />
       <img
         onClick={onClick}
         ref={ref}
         loading={loading}
-        className={`w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden ${className} `}
+        className={`w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden ${className}`}
         src={src}
-        srcSet={`${src} 480w, ${src} 800w, ${src} 1200w`}
-        sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+        srcSet={`${src} 100vw`}
+        sizes="100vw"
         decoding="async"
         fetchPriority="high"
         width={width}
         height={height}
         alt={alt}
+        role="img"
+        aria-label={alt}
       />
     </picture>
   ) : (
-    <img
+    <div
       ref={ref}
+      className="object-fill"
       style={{
         backgroundColor: "gray",
+        width,
+        height,
       }}
-      className="w-full h-full object-cover transform transition duration-200 aspect-video overflow-hidden"
-      sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
-      width={width}
-      height={height}
-      alt="empty"
     />
   );
 };

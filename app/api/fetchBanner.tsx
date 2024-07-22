@@ -3,7 +3,7 @@ import { Action } from "./Slices/BannersSlice/Banners";
 import { Dispatch } from "react";
 import axiosInstance from "./apiConfig";
 
-export const fetchBanner = (dispatch: Dispatch<Action>): (() => void) => {
+const fetchBanner = (dispatch: Dispatch<Action>): (() => void) => {
   let cancelTokenSource: CancelTokenSource | null = null;
   dispatch({ type: "Loading", payload: true });
 
@@ -42,3 +42,5 @@ export const fetchBanner = (dispatch: Dispatch<Action>): (() => void) => {
     }
   };
 };
+
+export default fetchBanner;

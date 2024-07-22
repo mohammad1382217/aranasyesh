@@ -3,17 +3,15 @@ import question from "../assets/svg/question.svg";
 import Accordion from "@material-tailwind/react/components/Accordion";
 import AccordionHeader from "@material-tailwind/react/components/Accordion/AccordionHeader";
 import AccordionBody from "@material-tailwind/react/components/Accordion/AccordionBody";
-import { fetchFAQ } from "../api/fetchFaq";
+import fetchFAQ from "../api/fetchFaq";
 import {
   FAQ,
   FAQReducer,
   initialFAQ,
 } from "../api/Slices/FAQSlice/faq";
 
+const Button = React.lazy(() => import("../components/flowbite-react/button"));
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
-const Button = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Button }))
-);
 
 const Icon = ({ id, open }: { id: number; open: number }) => {
   return (
@@ -85,7 +83,7 @@ const Questions = () => {
                   <h1 className="flex items-center justify-center text-3xl sm:text-5xl lg:justify-start  lg:text-6xl text-[#7F38B7] font-semibold p-6">
                     سوالی دارید؟
                   </h1>
-                  <h2 className="flex items-center justify-center lg:justify-start text-sm xs:text-xs sm:text-xl lg:text-4xl font-semibold p-4">
+                  <h2 className="flex items-center justify-center lg:justify-start text-sm xs:!text-sm sm:text-xl lg:text-4xl font-semibold p-4">
                     ما اینجا هستیم تا پاسخگوی شما باشیم.
                   </h2>
                   <div className="w-full flex flex-col lg:flex-row gap-4 lg:pt-10 lg:pb-5">
@@ -134,7 +132,7 @@ const Questions = () => {
                   onPointerLeaveCapture={undefined}
                 >
                   <AccordionHeader
-                    className="text-right border-none text-xs md:text-sm lg:text-lg bg-[#F5F5F5] rounded-2xl py-2 px-2 lg:px-6 flex gap-4"
+                    className="text-right border-none !text-sm md:text-sm lg:text-lg bg-[#F5F5F5] rounded-2xl py-2 px-2 lg:px-6 flex gap-4"
                     onClick={() => handleOpen(1)}
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
@@ -164,7 +162,7 @@ const Questions = () => {
                   onPointerLeaveCapture={undefined}
                 >
                   <AccordionHeader
-                    className="text-right border-none text-xs md:text-sm lg:text-lg bg-[#F5F5F5] rounded-2xl py-2 px-2 lg:px-6 flex gap-4"
+                    className="text-right border-none !text-sm md:text-sm lg:text-lg bg-[#F5F5F5] rounded-2xl py-2 px-2 lg:px-6 flex gap-4"
                     onClick={() => handleOpen(1)}
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}

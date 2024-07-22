@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance, { getCookie } from "../../api/apiConfig";
 import axios, { AxiosError, CancelTokenSource } from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { UserContext, UserContextType } from "../../api/Slices/UserSlice/userProvider";
+import { useAuth } from "../../api/authContext";
 
 const TransactionPage = () => {
   const showToastMessage = (message: string) => {
@@ -23,12 +23,11 @@ const TransactionPage = () => {
   const Authority = searchParams.get("Authority");
   const Status = searchParams.get("Status");
   const navigate = useNavigate();
-  const User = useContext(UserContext);
-  const { setAccount } = User as UserContextType;
 
   const formData = new FormData();
   formData.append("authority", Authority!);
   formData.append("status", Status!);
+  const { dispatch } = useAuth();
 
   useEffect(() => {
     let cancelTokenSource: CancelTokenSource | null = null;
@@ -51,15 +50,9 @@ const TransactionPage = () => {
           }
         );
         const data = response.data;
-        console.log(data.message);
         if (data.message === "تراکنش موفق!") {
           showToastMessage(data.message);
-          setAccount({
-            previous: null,
-            page: 1,
-            next: null,
-            results: [],
-          });
+          dispatch({type: "SET_ACCOUNT", payload: null});
           navigate("/BuySubscription");
         } else {
           showToastErrorMessage(data.message);

@@ -2,7 +2,7 @@ import axios, { AxiosError, CancelTokenSource } from "axios";
 import { Dispatch } from "react";
 import axiosInstance from "./apiConfig";
 
-export const fetchCities = (
+const fetchCities = (
   dispatch: Dispatch<Action>,
   Province: string
 ): (() => void) => {
@@ -42,6 +42,8 @@ export const fetchCities = (
     }
   };
 };
+
+export default fetchCities; 
 
 export interface Action {
   type: string;

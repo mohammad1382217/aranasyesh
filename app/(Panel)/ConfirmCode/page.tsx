@@ -1,16 +1,16 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { DiscountHistoryReducer, initialDiscountHistory } from "../../api/Slices/DiscountHistorySlice/DiscountHistory";
-import { postRepresentativeCode } from "../../api/postRepresentativeCode";
+import postRepresentativeCode from "../../api/postRepresentativeCode";
 import axiosInstance from "../../api/apiConfig";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.scss";
+import "slick-carousel/slick/slick-theme.scss";
+const Button = React.lazy(() => import("../../components/flowbite-react/button"));
+import { ScaleLoader } from "react-spinners";
+import Slider from "react-slick";
 
-const Button = React.lazy(() => import("flowbite-react").then(module => ({ default: module.Button })));
 const Input = React.lazy(() => import("../../components/input"));
 const Dialog = React.lazy(() => import("@material-tailwind/react/components/Dialog"));
 const DialogBody = React.lazy(() => import("@material-tailwind/react/components/Dialog/DialogBody"));
-const ScaleLoader = React.lazy(() => import("react-spinners").then(module => ({ default: module.ScaleLoader })));
-const Slider = React.lazy(() => import("react-slick").then(module => ({ default: module.default })));
 const SubmitButton = React.lazy(() => import("../../components/submitButton"));
 
 const ConfirmCode = () => {
@@ -234,7 +234,7 @@ const ConfirmCode = () => {
                 <Slider {...settings}>
                   {arraySlider.map((item, index) => (
                     <div key={index}>
-                      <h3 className="text-center">{item}</h3>
+                      <h2 className="text-center">{item}</h2>
                     </div>
                   ))}
                 </Slider>

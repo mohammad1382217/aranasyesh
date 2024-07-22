@@ -1,8 +1,8 @@
 import React from "react";
-import { HiChevronDown } from "react-icons/hi";
 const Accordion = React.lazy(()=> import("@material-tailwind/react/components/Accordion"));
 const AccordionHeader = React.lazy(()=> import("@material-tailwind/react/components/Accordion/AccordionHeader"));
 const AccordionBody = React.lazy(()=> import("@material-tailwind/react/components/Accordion/AccordionBody"));
+const HiChevronDown = React.lazy(()=> import("../components/icons/HiChevronDown"));
 
 const Icon: React.FC<IconProps> = ({ isOpen }) => {
   return (

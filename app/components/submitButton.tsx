@@ -1,7 +1,7 @@
 import React from "react";
-import { CgSpinner } from "react-icons/cg";
-import { MdDone } from "react-icons/md";
-import { FaTimes } from "react-icons/fa";
+const CgSpinner = React.lazy(() => import("../components/icons/CgSpinner"));
+const MdDone = React.lazy(() => import("../components/icons/MdDone"));
+const FaTimes = React.lazy(() => import("../components/icons/FaTimes"));
 
 interface SubmitButtonProps {
   className?: string;
@@ -30,7 +30,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
       disabled={loading && isValid && showCross ? true : false}
       className={`outline-none h-10 w-full flex justify-center items-center rounded-lg font-bold text-sm text-white tracking-wide cursor-pointer transition-all ease-in-out hover:bg-[#8b4bbd] ${
         loading ? "duration-1000" : ""
-      } mt-3 text-xs ${className} ${`!bg-[${buttonBgColor}]`}`}
+      } mt-3 !text-sm ${className} ${`!bg-[${buttonBgColor}]`}`}
       style={{ backgroundColor: buttonBgColor }} // استفاده از رنگ بک‌گراند از پراپ
       onClick={onClick}
       onKeyUp={onKeyUp}

@@ -5,14 +5,12 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { fetchCCP } from "../../api/fetchccp";
+import fetchCCP from "../../api/fetchccp";
 import axiosInstance from "../../api/apiConfig";
 import { CCPReducer, initialCCP } from "../../api/Slices/CCPSlice/CCP";
 import Video from "../../components/video";
+import { Label } from "flowbite-react";
 
-const Label = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Label }))
-);
 const DragUpload = lazy(() => import("../../components/DragUpload"));
 const TextArea = lazy(() => import("../../components/TextArea"));
 const Input = lazy(() => import("../../components/input"));
@@ -212,11 +210,13 @@ const CCP = () => {
             </div>
             <div className="flex flex-col w-full h-full items-center justify-center gap-2">
               <span className="text-[#717171] text-sm">ویدئو</span>
-              <Video
-                src={CCPState.CCPInformation[0]?.video!}
-                className={"bg-cover !h-36"}
-                alt={"ccp"}
-              />
+              <div className="flex h-36 rounded-xl w-full items-center justify-center">
+                <Video
+                  src={CCPState.CCPInformation[0]?.video!}
+                  className={"rounded-xl bg-cover"}
+                  alt={"ccp"}
+                />
+              </div>
             </div>
           </div>
         </div>

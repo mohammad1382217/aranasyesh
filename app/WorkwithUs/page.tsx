@@ -122,7 +122,7 @@ const WorkWithUs = () => {
         >
           فرم درخواست پیوستن به زیرمجموعه آران آسایش{" "}
         </h2>
-        <p lang="fa" className="text-base font-light text-[#303030] text-justify">
+        <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify">
           جهت ثبت مجموعه خود و استفاده از امکانات گروه آران آسایش برای افزایش
           بهره‌وری تبلیغاتی و درآمدی، اطلاعات دقیق مجموعه خود را جهت بررسی، در
           فرم زیر وارد کرده و پس از ثبت اطلاعات، منتظر تماس کارشناسان ما باشید.
@@ -312,9 +312,9 @@ const WorkWithUs = () => {
           <div className="flex flex-col justify-around md:flex-row">
             <div className="flex flex-col md:flex-row justify-center items-center space-y-5 p-1  md:space-y-0">
               <div className="w-10/12  md:p-3 gap-1 flex flex-col justify-center items-center">
-                <h3 className="text-center mb-2 text-lg font-semibold">
+                <h2 className="text-center mb-2 text-lg font-semibold">
                   شبکه‌های اجتماعی
-                </h3>
+                </h2>
                 <div className="flex md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between p-3">
                   <LazyImage
                     src={telegram}
@@ -369,9 +369,9 @@ const WorkWithUs = () => {
             <div className="flex flex-col mt-3 md:mt-0 gap-4 items-center justify-center">
               <div className="flex flex-col gap-2 justify-center items-center space-y-5 p-1  md:space-y-0">
                 <div className="w-12/12 flex flex-col justify-center items-center">
-                  <h3 className="text-center mb-2 text-lg font-semibold">
+                  <h2 className="text-center mb-2 text-lg font-semibold">
                     اطلاعات تماس
-                  </h3>
+                  </h2>
                   <div className="flex p-3 md:px-1 md:scale-75 md:py-1 md:mx-auto flex-row-reverse items-center justify-between ">
                     <LazyImage
                       src={call}
@@ -392,9 +392,9 @@ const WorkWithUs = () => {
               </div>
               <div className="flex flex-col justify-center items-center md:space-y-0">
                 <div className=" flex flex-col justify-center items-center">
-                  <h3 className="text-center mb-2 md:mt-1 md:mb-0 text-lg font-semibold">
+                  <h2 className="text-center mb-2 md:mt-1 md:mb-0 text-lg font-semibold">
                     آدرس ایمیل
-                  </h3>
+                  </h2>
                   <div className="flex p-3 md:scale-75 md:py-1 flex-row-reverse items-center justify-between ">
                     <LazyImage
                       src={sms}
@@ -508,7 +508,6 @@ const WorkWithUs = () => {
                       }
                     );
                     const data = response.data;
-                    console.log(data);
                     setLoading(false);
                     setIsValid(true);
                     setbuttonText("درخواست با موفقیت ثبت شد");
@@ -638,7 +637,6 @@ const WorkWithUs = () => {
                       }
                     );
                     const data = response.data;
-                    console.log(data);
                     setLoading(false);
                     setIsValid(true);
                     setbuttonText("درخواست با موفقیت ثبت شد");

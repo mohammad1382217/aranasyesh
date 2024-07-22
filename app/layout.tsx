@@ -1,31 +1,30 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./globals.scss";
 import Provider from "./api/Provider";
-import UserProvider from "./api/Slices/UserSlice/userProvider";
 import { Outlet, ScrollRestoration } from "react-router-dom";
-import Header from "./components/Header";
-import FooterWithSocialLinks from "./components/footer";
-// import reportWebVitals from "./reportWebVitial"
+import Skeleton from "react-loading-skeleton";
+const Header = React.lazy(() => import("./components/Header"));
+const FooterWithSocialLinks = React.lazy(() => import("./components/footer"));
 
 const RootLayout: React.FC = () => {
   return (
-    <UserProvider>
-      <Provider>
-        <section className="w-full min-h-screen h-full">
+    <Provider>
+      <section className="w-full min-h-screen h-full">
+        <Suspense
+          fallback={<Skeleton height={164} className="w-full h-full" />}
+        >
           <Header />
+        </Suspense>
 
-          <main className="flex flex-col justify-center items-center h-full">
-            <ScrollRestoration />
-            <Outlet />
-          </main>
+        <main className="flex flex-col justify-center items-center h-full">
+          <ScrollRestoration />
+          <Outlet />
+        </main>
 
-          <FooterWithSocialLinks />
-        </section>
-      </Provider>
-    </UserProvider>
+        <FooterWithSocialLinks />
+      </section>
+    </Provider>
   );
 };
-
-// reportWebVitals();
 
 export default RootLayout;

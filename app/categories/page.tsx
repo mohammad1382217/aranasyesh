@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { Suspense, useContext, useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   BannerReducer,
   CardCompany,
   initialBanner,
 } from "../api/Slices/BannersSlice/Banners";
-import { fetchCategoryCompany } from "../api/fetchCategoryComany";
+import fetchCategoryCompany from "../api/fetchCategoryComany";
 import Loading from "../components/loading";
 import Context, { ContextType } from "../api/context";
 
@@ -53,7 +53,8 @@ const Categories: React.FC = () => {
                     Address={[{ lable: item.show_name, link: "#" }]}
                   />
                 </div>
-                <LineSpace
+                <Suspense fallback={<div>loading...</div>}>
+                <LineSpace 
                   ClassName={"!justify-start -mr-2"}
                   color={`#4A4A4A`}
                   text={item.show_name}
@@ -69,6 +70,7 @@ const Categories: React.FC = () => {
                   showMore={false}
                   link={""}
                 />
+                </Suspense>
               </div>
             ))}
             <>

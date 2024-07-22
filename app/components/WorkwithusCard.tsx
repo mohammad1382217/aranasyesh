@@ -35,7 +35,7 @@ const WorkwithUsCard: React.FC<WorkwithUsCardProps> = ({
           height={144}
         />
         <div className="md:m-2">
-          <p lang="fa" className="text-base font-light text-[#303030] text-justify">
+          <p role="text" lang="fa" className="text-base font-light text-[#303030] text-justify">
             {text}
           </p>
           <Button

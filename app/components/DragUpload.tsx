@@ -1,13 +1,6 @@
 import React, { useRef } from "react";
-const Button = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Button }))
-);
-const FileInput = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.FileInput }))
-);
-const Label = React.lazy(() =>
-  import("flowbite-react").then((module) => ({ default: module.Label }))
-);
+import { Label, FileInput } from "flowbite-react";
+const Button = React.lazy(() => import("../components/flowbite-react/button"));
 
 const DragUpload: React.FC<DragUploadProps> = ({
   lable,
@@ -45,10 +38,10 @@ const DragUpload: React.FC<DragUploadProps> = ({
           </svg>
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center text-center">
-              <p lang="fa" className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 px-4 text-sm text-[#7F38B7] text-justify">
+              <p role="text" lang="fa" className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 px-4 text-sm text-[#7F38B7] text-justify">
                 لطفاً فایل خود را بکشید و رها کنید
               </p>
-              <p lang="fa" className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 text-xs text-[#7F38B7]">
+              <p role="text" lang="fa" className="hidden lg:flex opacity-0 lg:opacity-100 mb-2 !text-sm text-[#7F38B7]">
                 یا
               </p>
             </div>
@@ -56,15 +49,12 @@ const DragUpload: React.FC<DragUploadProps> = ({
               type="button"
               color="gray"
               className="text-[#7F38B7] bg-gray-100 hover:bg-gray-200 shadow-none hover:shadow-none"
-              placeholder={undefined}
               onClick={handleClickUploadFile}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
             >
               انتخاب فایل
             </Button>
             {selectedFile && (
-              <p lang="fa" className="text-xs text-gray-500 dark:text-gray-400">
+              <p role="text" lang="fa" className="!text-sm text-gray-500 dark:text-gray-400">
                 {(selectedFile as File).name}
               </p>
             )}

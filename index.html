@@ -2,6 +2,7 @@
 <html class="w-screen h-screen min-h-screen" lang="fa" dir="rtl" xml:lang="fa">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>آران آسایش آفرینان</title>
     <meta name="description" content="مجموعه آران آسایش آفرینان متشکل از جمعی از پزشکان و اساتید دانشگاه و صاحبان کسب و کار از سال 1397 با مدیریت آقای محمدرضا مرادی مشغول فعالیت است." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,8 +16,12 @@
     <!-- Preload font -->
     <link rel="preload" href="/font/Estedad-FD-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
     
+    <!-- Preload style -->
+    <link rel="preload" href="/app/_font.scss" as="stylesheet" type="text/css" crossorigin="anonymous" />
+    <link rel="preload" href="/app/globals.scss" as="stylesheet" type="text/css" crossorigin="anonymous" />
+
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
@@ -65,9 +70,6 @@
     <meta name="twitter:title" content="آران آسایش آفرینان - بهترین خدمات وب" />
     <meta name="twitter:description" content="آران آسایش آفرینان، ارائه‌دهنده بهترین خدمات وب و اپلیکیشن." />
     <meta name="twitter:image" content="https://aranasayesh.ir/images/og-image.jpg" />
-    
-    <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://api.aranasayesh.ir 'self' data:; script-src 'self' ; style-src 'self'; font-src 'self' data:; connect-src 'self' https://api.aranasayesh.ir" />
   </head>
   <body class="w-screen h-screen min-h-screen overflow-y-auto overflow-x-hidden">
     <div id="root" role="main"></div>

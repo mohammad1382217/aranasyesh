@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useReducer } from "react";
-import { fetchBlogPost } from "../api/fetchblogPost";
+import fetchBlogPost from "../api/fetchblogPost";
 import { BlogReducer, initialBlog } from "../api/Slices/BlogSlice/blog";
 const LazyImage = React.lazy(() => import("../components/LazyImage"));
 const BreadcrumbsWithIcon = React.lazy(() => import("../components/BreadcrumbsWithIcon"));
