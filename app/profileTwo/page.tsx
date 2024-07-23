@@ -11,12 +11,16 @@ const FlowbiteListGroup = React.lazy(() => import("../components/ListGroup"));
 const ProfileTwo: React.FC = () => {
   const { profile, dispatch } = useAuth();
   const navigate = useNavigate();
-  const semiLengthCard = Math.ceil(profile!.discounts.length / 2);
+  const semiLengthCard = Math.ceil(profile!?.discounts.length / 2);
 
   const handleLogout = () => {
-    dispatch({ type: 'SET_LOGGED_IN', payload: false});
     deleteCookie("accessToken");
-    dispatch({ type: "SET_ACCOUNT", payload: null});
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("isLoggedIn");
+    dispatch({ type: "SET_ADMIN", payload: false });
+    dispatch({ type: "SET_LOGGED_IN", payload: false });
+    dispatch({ type: "SET_PROFILE", payload: null });
+    dispatch({ type: "SET_ACCOUNT", payload: null });
     navigate("/");
   };
 

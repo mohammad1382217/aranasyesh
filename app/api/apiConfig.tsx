@@ -53,6 +53,9 @@ axiosInstance.interceptors.response.use(
       error.response &&
       error.response.status === 400 &&
       error.response.data.detail === "درخواست ناقص."
+      ||
+      error.response &&
+      error.response.status === 401 
     ) {
       // Handle token expiration (e.g., logout)
       deleteCookie("accessToken");

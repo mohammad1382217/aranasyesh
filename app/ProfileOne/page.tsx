@@ -65,7 +65,7 @@ export const CustomInput: React.FC<CustomInputProps> = ({
 export const weekDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
 
 const ProfileOne: React.FC = () => {
-  const { account, profile, dispatch } = useAuth();
+  const { account, profile, dispatch, logout, updateProfile } = useAuth();
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -81,15 +81,8 @@ const ProfileOne: React.FC = () => {
     initialCities
   );
 
-  // وقتی کاربر لاگ‌آوت می‌کند
-  const handleLogout = () => {
-    dispatch({ type: "SET_LOGGED_IN", payload: false });
-    deleteCookie("accessToken");
-    dispatch({ type: "SET_ACCOUNT", payload: null });
-    navigate("/");
-  };
-
   useEffect(() => {
+    dispatch({ type: "SET_UPDTAE_PROFILE", payload: !updateProfile });
     if (profile?.province !== "") {
       if (profile?.province !== null) {
         const cleanuptwo = fetchCities(dispatchCities, profile?.province!);
@@ -97,6 +90,18 @@ const ProfileOne: React.FC = () => {
       }
     }
   }, [profile?.province]);
+
+  
+  const handleLogout = () => {
+    deleteCookie("accessToken");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("isLoggedIn");
+    dispatch({ type: "SET_ADMIN", payload: false });
+    dispatch({ type: "SET_LOGGED_IN", payload: false });
+    dispatch({ type: "SET_PROFILE", payload: null });
+    dispatch({ type: "SET_ACCOUNT", payload: null });
+    navigate("/");
+  };
 
   const List: List[] = [
     { title: "اطلاعات حساب", link: "/ProfileOne" },

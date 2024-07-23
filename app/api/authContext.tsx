@@ -53,6 +53,7 @@ interface AuthState {
   isAdmin: boolean;
   isLoading: boolean;
   isLoggedIn: boolean;
+  updateProfile: boolean;
   profile: ProfileData | null;
   account: AccountData | null;
 }
@@ -60,6 +61,7 @@ interface AuthState {
 const initialState: AuthState = {
   isAdmin: JSON.parse(localStorage.getItem("isAdmin") || "false"),
   isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn") || "false"),
+  updateProfile: false,
   isLoading: false,
   profile: null,
   account: null,
@@ -70,7 +72,8 @@ type AuthAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_PROFILE"; payload: ProfileData | null }
   | { type: "SET_ACCOUNT"; payload: AccountData | null }
-  | { type: "SET_LOGGED_IN"; payload: boolean };
+  | { type: "SET_LOGGED_IN"; payload: boolean }
+  | { type: "SET_UPDTAE_PROFILE"; payload: boolean };
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
@@ -84,6 +87,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
       return { ...state, account: action.payload };
     case "SET_LOGGED_IN":
       return { ...state, isLoggedIn: action.payload };
+    case "SET_UPDTAE_PROFILE":
+      return { ...state, updateProfile: action.payload };
     default:
       return state;
   }
@@ -98,12 +103,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: "SET_LOADING", payload: true });
       try {
-        if (state.isLoggedIn) {
+        if (state.isLoggedIn || state.updateProfile) {
           const userData: AccountData = await UserService.getUserData();
           dispatch({ type: "SET_ACCOUNT", payload: userData });
           const isAdmin = userData.results[0]?.permission?.is_owner ?? false;
@@ -126,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     fetchData();
-  }, [state.isLoggedIn]);
+  }, [state.isLoggedIn, dispatch, state.updateProfile]);
 
   // Save isAdmin and isLoggedIn to localStorage
   useEffect(() => {
@@ -145,7 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: "SET_LOGGED_IN", payload: false });
     navigate("/");
   };
-
+  
   return (
     <AuthContext.Provider value={{ ...state, dispatch, logout }}>
       {children}
